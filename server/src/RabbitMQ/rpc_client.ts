@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MessageRPC, Data, RPCCLientData, ResponseRPC } from './types';
 
 // tslint:disable-next-line: no-any
-export const sendRPCMessage = (channel: Amqp.Channel, queue: Amqp.Replies.AssertQueue, correlationId: string, queueName: string, request: MessageRPC, next: (error?: any, data?: Data) => void) => {
+export const sendRPCMessage = (channel: Amqp.Channel, queue: Amqp.Replies.AssertQueue, correlationId: string, queueName: string, request: MessageRPC, next: (error?: any, data?: Data) => void): void => {
     try {
         channel.sendToQueue(queueName, Buffer.from(JSON.stringify(request)), {
             replyTo: queue.queue,

@@ -1,15 +1,21 @@
 import * as _ from 'lodash';
-import { config } from './../config';
+import { RPCClient } from './RPCClient';
 import { createClient, sendRPCMessage } from '../RabbitMQ';
 import { MessageRPC, Data, RPCCLientData } from '../RabbitMQ/types';
 
-const queueName = config.rpc.coreBzl.queueName;
+export class CoreBzlRpcClient implements RPCClient {
+    // tslint:disable-next-line: readonly-keyword
+    private coreBzlClient: RPCCLientData;
+    private readonly queueName: string;
 
-let CoreBzlClient: RPCCLientData;
-
-export const sendMessage = async (request: MessageRPC, next: (error: Error, data: Data) => void) => {
-    if (_.isEmpty(CoreBzlClient)) {
-        CoreBzlClient = await createClient();
+    constructor(queueName: string) {
+        this.queueName = queueName;
     }
-    return sendRPCMessage(CoreBzlClient.channel, CoreBzlClient.queue, CoreBzlClient.corrId, queueName, request, next);
+
+    async sendMessage(request: MessageRPC, next: (error: Error, data: Data) => void): Promise<void> {
+        if (_.isEmpty(this.coreBzlClient)) {
+            this.coreBzlClient = await createClient();
+        }
+        return sendRPCMessage(this.coreBzlClient.channel, this.coreBzlClient.queue, this.coreBzlClient.corrId, this.queueName, request, next);
+    }
 }
