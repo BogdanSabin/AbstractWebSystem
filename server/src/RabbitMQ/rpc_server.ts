@@ -2,6 +2,7 @@ import * as Amqp from 'amqplib';
 import { MessageRPC, ResponseRPC } from './types';
 import { registrarAPI } from '../api';
 
+// tslint:disable: no-unsafe-any
 export const startRpcServer = async (queueName: string) => {
     try {
         const connection = await Amqp.connect('amqp://localhost');
@@ -10,7 +11,7 @@ export const startRpcServer = async (queueName: string) => {
         channel.prefetch(1);
 
         channel.consume(queueName, (msg: Amqp.ConsumeMessage) => {
-            const message: MessageRPC = JSON.parse(msg.content.toString());
+            const message: MessageRPC = JSON.parse(msg.content.toString()) as MessageRPC;
             const api = message.api;
             const method = message.method;
             if (registrarAPI[api] && registrarAPI[api][method]) {

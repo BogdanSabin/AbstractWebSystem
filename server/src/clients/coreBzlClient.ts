@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
+import { config } from './../config';
 import { createClient, sendRPCMessage } from '../RabbitMQ';
 import { MessageRPC, Data, RPCCLientData } from '../RabbitMQ/types';
 
-const queueName = 'rpc_corebzl_queue';
+const queueName = config.rpc.coreBzl.queueName;
 
 let CoreBzlClient: RPCCLientData;
 

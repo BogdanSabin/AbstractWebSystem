@@ -3,12 +3,14 @@ import * as Amqp from 'amqplib';
 export interface MessageRPC {
     readonly api: string,
     readonly method: string,
-    readonly data: any /* eslint-disable-line no-any */
+    // tslint:disable-next-line: no-any
+    readonly data: any
 }
 
 export interface ResponseRPC {
     readonly error?: { readonly error: string, readonly code: string },
-    readonly response?: any /* eslint-disable-line no-any */
+    // tslint:disable-next-line: no-any
+    readonly response?: any
 }
 
 export interface RPCCLientData {
@@ -17,4 +19,5 @@ export interface RPCCLientData {
     readonly corrId: string
 }
 
-export type Data = any; /* eslint-disable-line no-any */
+// tslint:disable-next-line: no-any
+export type Data = any;

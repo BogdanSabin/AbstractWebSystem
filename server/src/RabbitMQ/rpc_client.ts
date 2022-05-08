@@ -2,7 +2,7 @@ import * as Amqp from 'amqplib';
 import { v4 as uuidv4 } from 'uuid';
 import { MessageRPC, Data, RPCCLientData, ResponseRPC } from './types';
 
-// eslint-disable-next-line no-any,no-unsafe-any
+// tslint:disable-next-line: no-any
 export const sendRPCMessage = (channel: Amqp.Channel, queue: Amqp.Replies.AssertQueue, correlationId: string, queueName: string, request: MessageRPC, next: (error?: any, data?: Data) => void) => {
     try {
         channel.sendToQueue(queueName, Buffer.from(JSON.stringify(request)), {
@@ -12,7 +12,7 @@ export const sendRPCMessage = (channel: Amqp.Channel, queue: Amqp.Replies.Assert
 
         channel.consume(queue.queue, msg => {
             if (msg.properties.correlationId === correlationId) {
-                const response:ResponseRPC = JSON.parse(msg.content.toString());
+                const response: ResponseRPC = JSON.parse(msg.content.toString()) as ResponseRPC;
                 if (response.error) {
                     return next(response.error);
                 }
