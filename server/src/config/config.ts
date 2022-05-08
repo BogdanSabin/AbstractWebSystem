@@ -6,15 +6,18 @@ export const config: ConfigurationType = {
         services: {
             admin: {
                 port: 8000,
-                hostname: 'localhost'
+                hostname: 'localhost',
+                logType: 'dev'
             },
             desktop: {
                 port: 8001,
-                hostname: 'localhost'
+                hostname: 'localhost',
+                logType: 'dev'
             },
             mobile: {
                 port: 8002,
-                hostname: 'localhost'
+                hostname: 'localhost',
+                logType: 'dev'
             }
         },
         rpc: {

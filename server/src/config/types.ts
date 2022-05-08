@@ -10,6 +10,7 @@ export interface ConfigurationType {
 export interface ServiceConfig {
     readonly port: number,
     readonly hostname: string
+    readonly logType: string
 }
 
 export interface RpcConfig {
