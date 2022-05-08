@@ -65,7 +65,7 @@
       "curly": [true, "ignore-same-line"],
       "deprecation": true,
       "no-console": [
-        true,
+        false,
         "log",
         "debug",
         "info",
@@ -103,7 +103,7 @@
       "no-misused-new": true,
       "no-construct": true,
       "prefer-method-signature": true,
-      "no-void-expression": true,
+      "no-void-expression": false,
       "no-return-await": true,
       "no-floating-promises": true,
       "no-var-keyword": true,
