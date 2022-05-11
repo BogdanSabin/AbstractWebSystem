@@ -1,5 +1,3 @@
-import { AdminRoutes } from './../routes/AdminRouter';
-import { Factory } from './../factory';
 process.env.serverName = 'admin';
 
 import * as express from 'express';
@@ -8,6 +6,8 @@ import * as cors from 'cors';
 import * as morgan from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import { config } from './../config';
+import { Factory } from './../factory';
+import { AdminRoutes } from './../routes/AdminRouter';
 
 const adminConfig = config.services.admin;
 const NOT_FOUND_HTTP_STATUS = 404;

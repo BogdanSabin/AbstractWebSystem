@@ -9,7 +9,8 @@ export interface ConfigurationType {
 }
 export interface ServiceConfig {
     readonly port: number,
-    readonly hostname: string
+    readonly hostname: string,
+    readonly protocol: string,
     readonly logType: string
 }
 
@@ -34,6 +35,11 @@ export interface DefaultConfig {
         readonly secret: {
             readonly auth: string,
             readonly email: string
+        }
+        readonly email: {
+            readonly type: string,
+            readonly email: string,
+            readonly password: string
         }
     }
 }

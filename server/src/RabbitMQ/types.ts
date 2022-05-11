@@ -1,4 +1,5 @@
 import * as Amqp from 'amqplib';
+import { BzlErrorResponse } from '../bzl/lib/BzlError';
 
 export interface MessageRPC {
     readonly api: string,
@@ -8,7 +9,7 @@ export interface MessageRPC {
 }
 
 export interface ResponseRPC {
-    readonly error?: { readonly error: string, readonly code: string },
+    readonly error?: BzlErrorResponse,
     // tslint:disable-next-line: no-any
     readonly response?: any
 }

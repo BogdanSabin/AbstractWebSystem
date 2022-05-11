@@ -31,7 +31,7 @@ export const createClient = async (): Promise<RPCCLientData> => {
     try {
         const connection = await Amqp.connect('amqp://localhost');
         const channel = await connection.createChannel();
-        const queue = await channel.assertQueue('', { exclusive: true });
+        const queue = await channel.assertQueue('', { exclusive: true, autoDelete: true });
         const uuid = uuidv4();
         return { queue: queue, channel: channel, corrId: uuid }
     } catch (error) {

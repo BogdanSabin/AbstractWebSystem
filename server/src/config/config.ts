@@ -7,16 +7,19 @@ export const config: ConfigurationType = {
             admin: {
                 port: 8000,
                 hostname: 'localhost',
+                protocol: 'http',
                 logType: 'dev'
             },
             desktop: {
                 port: 8001,
                 hostname: 'localhost',
+                protocol: 'http',
                 logType: 'dev'
             },
             mobile: {
                 port: 8002,
                 hostname: 'localhost',
+                protocol: 'http',
                 logType: 'dev'
             }
         },
@@ -34,6 +37,11 @@ export const config: ConfigurationType = {
             secret: {
                 auth: 'HYtvL7Of8KcZbdomUAeVRJmd61WUycOrJYSkmZzN',
                 email: 'aBVEUj9bJveUiPokFUIumGBFsTnuqAXwGRVGPgyn'
+            },
+            email: {
+                type: 'gmail',
+                email: 'trips.appmobile@gmail.com',
+                password: 'Tripsapp123'
             }
         }
     },

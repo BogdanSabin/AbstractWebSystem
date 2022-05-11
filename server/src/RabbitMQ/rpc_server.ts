@@ -1,6 +1,7 @@
 import * as Amqp from 'amqplib';
 import { MessageRPC, ResponseRPC } from './types';
-import { registrarAPI } from '../api';
+import { registrarAPI } from '../bzl/api';
+import { BzlErrorResponse } from '../bzl/lib/BzlError';
 
 // tslint:disable: no-unsafe-any
 export const startRpcServer = async (queueName: string) => {
@@ -15,8 +16,11 @@ export const startRpcServer = async (queueName: string) => {
             const api = message.api;
             const method = message.method;
             if (registrarAPI[api] && registrarAPI[api][method]) {
-                registrarAPI[api][method](message.data, (error, data) => {
-                    const response: ResponseRPC = { error: error, response: data };
+                registrarAPI[api][method](message.data, (error: BzlErrorResponse | Error, data) => {
+                    const response: ResponseRPC = {
+                        error: error instanceof Error ? { code: 500, message: error.message + ' ' + error.stack } : error,
+                        response: data
+                    };
                     channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)), {
                         correlationId: msg.properties.correlationId
                     });
@@ -24,7 +28,7 @@ export const startRpcServer = async (queueName: string) => {
                     channel.ack(msg);
                 })
             } else {
-                const response: ResponseRPC = { error: { error: new Error(registrarAPI[api] ? `Unknown method: ${api}.${method}` : `Unknown API: ${api}`).message, code: '500' } };
+                const response: ResponseRPC = { error: { message: new Error(registrarAPI[api] ? `Unknown method: ${api}.${method}` : `Unknown API: ${api}`).message, code: 500 } };
                 channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)), {
                     correlationId: msg.properties.correlationId
                 });

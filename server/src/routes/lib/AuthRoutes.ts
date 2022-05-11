@@ -15,6 +15,14 @@ export class AuthRoutes {
             this.authMiddleware.login(req, res, next);
         });
 
+        router.post('/register', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.authMiddleware.register(req, res, next);
+        });
+
+        router.get('/confirmation/:token', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.authMiddleware.emailConfirmation(req, res, next);
+        });
+
         return router
     }
 }
