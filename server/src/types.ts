@@ -17,3 +17,14 @@ export interface RegisterData {
     readonly role: string,
     readonly password: string,
 }
+
+export interface ChangePasswordData {
+    readonly token: string,
+    readonly code: string,
+    readonly newPassword: string
+}
+
+export interface GetChangePasswordToken {
+    readonly email: string,
+    readonly app: string
+}

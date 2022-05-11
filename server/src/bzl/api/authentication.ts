@@ -1,5 +1,5 @@
-import { LoginData, NextFunction, RegisterData } from '../../types';
-import { loginUser, registerUser, emailConfirmation } from '../lib/authentication';
+import { LoginData, NextFunction, RegisterData, ChangePasswordData, GetChangePasswordToken } from '../../types';
+import { loginUser, registerUser, emailConfirmation, getChangePasswordToken, changePassword } from '../lib/authentication';
 
 export const authAPI = {
     login: (data: LoginData, next: NextFunction) => {
@@ -15,5 +15,15 @@ export const authAPI = {
     emailConfirmation: (token: string, next: NextFunction) => {
         console.log('Data', token);
         return emailConfirmation(token, next);
+    },
+
+    getChangePasswordToken: (data: GetChangePasswordToken, next: NextFunction) => {
+        console.log('Data', data);
+        return getChangePasswordToken(data, next);
+    },
+
+    changePassword: (data: ChangePasswordData, next: NextFunction) => {
+        console.log('Data', data);
+        return changePassword(data, next);
     }
 }

@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as _ from 'lodash';
-import { LoginData, RegisterData } from './../types';
+import { LoginData, RegisterData, ChangePasswordData, GetChangePasswordToken } from './../types';
 import { RPCClient } from '../clients';
 import { respond, redirect } from './helper';
 
@@ -36,6 +36,33 @@ export class AuthMiddleware {
         this.rpcClient.sendMessage({ api: 'auth', method: 'emailConfirmation', data: token })
             .then(data => {
                 return redirect(res, null, data);
+            }).catch(error => {
+                return respond(res, error, null);
+            })
+    }
+
+    getChangePasswordToken(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        const getChangePasswordToken: GetChangePasswordToken = {
+            email: _.get(req.body, 'email', ''),
+            app: process.env.serverName === 'admin' ? 'Admin Abstract Web System' : 'Online Store'
+        }
+        this.rpcClient.sendMessage({ api: 'auth', method: 'getChangePasswordToken', data: getChangePasswordToken })
+            .then(data => {
+                return respond(res, null, data);
+            }).catch(error => {
+                return respond(res, error, null);
+            })
+    }
+
+    changePassword(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        const changePasswordData: ChangePasswordData = {
+            token: req.headers.authorization,
+            code: _.get(req.body, 'code', ''),
+            newPassword: _.get(req.body, 'newPassword', '')
+        }
+        this.rpcClient.sendMessage({ api: 'auth', method: 'changePassword', data: changePasswordData })
+            .then(data => {
+                return respond(res, null, data);
             }).catch(error => {
                 return respond(res, error, null);
             })
