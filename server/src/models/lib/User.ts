@@ -3,7 +3,7 @@ import { Mongoose, SchemaDefinition, SchemaOptions } from 'mongoose';
 import { ModelLib } from './ModelLib';
 import { ModelNames } from '../types/ModelTypes';
 import { ModelsFactory } from '../index';
-import { UserModelType } from './../types/UserType';
+import { UserModelType } from '../types/UserTypes';
 import { PasswordCypher } from '../../bzl/lib/PasswordCypher';
 
 // tslint:disable: no-shadowed-variable

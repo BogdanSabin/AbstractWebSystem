@@ -43,7 +43,7 @@ export class AuthMiddleware {
 
     getChangePasswordToken(req: express.Request, res: express.Response, next: express.NextFunction): void {
         const getChangePasswordToken: GetChangePasswordToken = {
-            email: _.get(req.body, 'email', ''),
+            email: (_.get(req.body, 'email', '') as string),
             app: process.env.serverName === 'admin' ? 'Admin Abstract Web System' : 'Online Store'
         }
         this.rpcClient.sendMessage({ api: 'auth', method: 'getChangePasswordToken', data: getChangePasswordToken })
@@ -57,8 +57,8 @@ export class AuthMiddleware {
     changePassword(req: express.Request, res: express.Response, next: express.NextFunction): void {
         const changePasswordData: ChangePasswordData = {
             token: req.headers.authorization,
-            code: _.get(req.body, 'code', ''),
-            newPassword: _.get(req.body, 'newPassword', '')
+            code: (_.get(req.body, 'code', '') as string),
+            newPassword: (_.get(req.body, 'newPassword', '') as string)
         }
         this.rpcClient.sendMessage({ api: 'auth', method: 'changePassword', data: changePasswordData })
             .then(data => {

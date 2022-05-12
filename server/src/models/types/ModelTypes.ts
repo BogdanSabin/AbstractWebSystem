@@ -6,4 +6,9 @@ export interface DocType { };
 
 export const enum ModelNames {
     User = 'User',
+    Site = 'Site',
+    Product = 'Product',
+    Order = 'Order',
+    Theme = 'Theme',
+    Image = 'Image'
 }
