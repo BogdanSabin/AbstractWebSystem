@@ -9,7 +9,8 @@ export class Site extends ModelLib<SiteTypes.SiteModelType>{
     protected static readonly SchemaDef: SchemaDefinition = {
         name: { type: String, required: true },
         description: { type: String, required: false },
-        link: { type: String, required: true },
+        linkDesktop: { type: String, required: true },
+        linkMobile: { type: String, required: true },
         adminId: { type: Schema.Types.ObjectId, ref: 'User', required: false },
         themeId: { type: Schema.Types.ObjectId, ref: 'Theme', required: false },
         productsSettings: {

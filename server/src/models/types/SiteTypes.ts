@@ -5,7 +5,8 @@ export interface SiteModelType extends SiteType, ModelType { }
 export interface SiteType extends DocType {
     readonly name: string,
     readonly description?: string,
-    readonly link: string,
+    readonly linkDesktop: string,
+    readonly linkMobile: string,
     readonly adminId: string,
     readonly themeId: string
     readonly productsSettings: {

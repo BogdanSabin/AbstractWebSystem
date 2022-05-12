@@ -7,6 +7,7 @@
     "build": "tsc -p .",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "start:coreBzl": "node ./dist/services/coreBzl.js",
+    "start:autorizator": "node ./dist/services/autorizator.js",
     "start:admin": "node ./dist/services/serverAdmin.js",
     "start:desktop": "node ./dist/services/serverDesktop.js",
     "start:mobile": "node ./dist/services/serverMobile.js"

@@ -6,19 +6,19 @@ export const config: ConfigurationType = {
         services: {
             admin: {
                 port: 8000,
-                hostname: 'localhost',
+                hostname: 'localhost:8000',
                 protocol: 'http',
                 logType: 'dev'
             },
             desktop: {
                 port: 8001,
-                hostname: 'localhost',
+                hostname: 'localhost:8001',
                 protocol: 'http',
                 logType: 'dev'
             },
             mobile: {
                 port: 8002,
-                hostname: 'localhost',
+                hostname: 'localhost:8002',
                 protocol: 'http',
                 logType: 'dev'
             }
@@ -26,6 +26,9 @@ export const config: ConfigurationType = {
         rpc: {
             coreBzl: {
                 queueName: 'rpc_corebzl_queue'
+            },
+            autorizator: {
+                queueName: 'rpc_autz_queue'
             }
         },
         crypto: {

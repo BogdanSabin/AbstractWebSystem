@@ -28,3 +28,45 @@ export interface GetChangePasswordToken {
     readonly email: string,
     readonly app: string
 }
+
+export interface with_token {
+    readonly token: string
+}
+
+export interface AutzContext extends with_token {
+    readonly method?: string,
+    readonly api?: string
+}
+
+export interface SiteData extends with_token {
+    readonly name: string,
+    readonly description?: string,
+    readonly themeId: string
+    readonly productsSettings: {
+        readonly fields: readonly {
+            readonly key: string,
+            readonly type: string,
+            readonly isMandatory: boolean
+        }[]
+    },
+    readonly ordersSettings: {
+        readonly fields: readonly {
+            readonly key: string,
+            readonly type: string,
+            readonly isMandatory: boolean
+        }[]
+    }
+}
+
+export interface UpdateSiteData extends SiteData {
+    readonly id: string
+}
+
+export interface IdData extends with_token {
+    readonly id: string
+}
+
+export interface SiteQueryData extends with_token {
+    readonly text?: string,
+    readonly adminId?: string
+}

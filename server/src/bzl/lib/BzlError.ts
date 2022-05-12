@@ -4,31 +4,31 @@ export interface BzlErrorResponse {
 }
 
 export class BzlError {
-    static NodataFound(): BzlErrorResponse {
+    static NodataFound(error?: string): BzlErrorResponse {
         return {
             code: 404,
-            message: 'No data Found'
+            message: error ? `No data Found:${error}` : 'No data Found'
         }
     }
 
-    static Forbidden(): BzlErrorResponse {
+    static Forbidden(error?: string): BzlErrorResponse {
         return {
             code: 403,
-            message: 'Forbidden'
+            message: error ? `Forbidden:${error}` : 'Forbidden'
         }
     }
 
-    static Collision(): BzlErrorResponse {
+    static Collision(error?: string): BzlErrorResponse {
         return {
             code: 401,
-            message: 'Collsion of fields in database'
+            message: error ? `Collsion of fields in database ${error}` : 'Collsion of fields in database'
         }
     }
 
-    static Unauthorized(): BzlErrorResponse {
+    static Unauthorized(error?: string): BzlErrorResponse {
         return {
             code: 401,
-            message: 'Unauthorized'
+            message: error ? `Unauthorized ${error}` : 'Unauthorized'
         }
     }
 

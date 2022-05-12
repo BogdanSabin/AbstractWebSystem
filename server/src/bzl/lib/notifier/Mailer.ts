@@ -32,7 +32,7 @@ export class Mailer {
 
 
     sendConfirmationEmail(token: string, emailToSend: string, name: string, app: string, next: NextFunction): void {
-        const url = `${config.services.admin.protocol}://${config.services.admin.hostname}:${config.services.admin.port}/api/admin/auth/confirmation/${token}`
+        const url = `${config.services.admin.protocol}://${config.services.admin.hostname}/api/admin/auth/confirmation/${token}`
 
         const mailOptions = {
             from: `${_.upperFirst(app)} <${this.from}>`,

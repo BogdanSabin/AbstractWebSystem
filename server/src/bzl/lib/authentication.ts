@@ -9,7 +9,7 @@ import { config } from './../../config';
 const tokenSecretKey = config.auth.secret.auth;
 const emailSecretKey = config.auth.secret.email;
 
-interface TokenPayload {
+export interface TokenPayload {
     readonly subject: string,
     readonly role: string,
     readonly isMaster: boolean
@@ -87,7 +87,7 @@ export const emailConfirmation = (token: string, next: NextFunction) => {
             if (mongores.nModified === 0) return next(BzlError.NodataFound());
 
             const res = {
-                redirect: `${config.services.admin.protocol}://${config.services.admin.hostname}:${config.services.admin.port}/`
+                redirect: `${config.services.admin.protocol}://${config.services.admin.hostname}/`
             };
 
             return next(null, res);
