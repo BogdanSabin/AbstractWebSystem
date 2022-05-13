@@ -5,6 +5,7 @@ import { BzlError } from '../BzlError';
 import { config } from './../../../config';
 import { Factory } from './../../../factory';
 import { TokenPayload } from '../authentication';
+import { registry } from './MethodAutorization';
 
 const tokenSecretKey = config.auth.secret.auth;
 
@@ -20,6 +21,12 @@ export const authorize = (autzData: AutzContext, next: NextFunction) => {
         const payload = jwt.verify(tokenPart, tokenSecretKey) as TokenPayload;
 
         if (!payload) return next(BzlError.UnauthorizedError('Payload missing'));
+
+        if (!payload.isMaster) {
+            if (!registry[payload.role][autzData.api][autzData.method]) {
+                return next(BzlError.UnauthorizedError(`User in not authorize in context ${payload.role}.${autzData.api}.${autzData.method}`));
+            }
+        }
 
         const userid = payload.subject;
 

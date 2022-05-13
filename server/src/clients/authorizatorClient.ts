@@ -3,6 +3,7 @@ import * as PromiseB from 'bluebird';
 import { RPCClient } from './RPCClient';
 import { createClient, sendRPCMessage } from '../RabbitMQ';
 import { MessageRPC, Data, RPCCLientData } from '../RabbitMQ/types';
+import { AutzContext } from '../types';
 
 export class AuthorizatorRpcClient implements RPCClient {
     // tslint:disable-next-line: readonly-keyword
@@ -40,7 +41,7 @@ export class AuthorizatorRpcClient implements RPCClient {
             })
     }
 
-    async authorize(data: Data): Promise<Data> {
+    async authorize(data: AutzContext): Promise<Data> {
         return this.sendMessage({ api: 'autz', method: 'authorize', data: data })
     }
 }

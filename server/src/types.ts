@@ -34,8 +34,8 @@ export interface with_token {
 }
 
 export interface AutzContext extends with_token {
-    readonly method?: string,
-    readonly api?: string
+    readonly method: string,
+    readonly api: string
 }
 
 export interface SiteData extends with_token {
