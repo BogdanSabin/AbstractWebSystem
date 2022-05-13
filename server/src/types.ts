@@ -70,3 +70,25 @@ export interface SiteQueryData extends with_token {
     readonly text?: string,
     readonly adminId?: string
 }
+
+export interface ProductData extends with_token {
+    readonly siteId: string,
+    readonly fields: readonly {
+        readonly key: string,
+        readonly value: string,
+    }[]
+}
+
+export interface UpdateProductData extends with_token {
+    readonly id: string
+    readonly fields: readonly {
+        readonly key: string,
+        readonly value: string,
+    }[]
+}
+
+export interface ProductQueryData extends with_token {
+    readonly text?: string,
+    readonly adminId?: string
+    readonly siteId?: string
+}

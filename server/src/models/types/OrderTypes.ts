@@ -4,6 +4,7 @@ export interface OrderModelType extends OrderType, ModelType { }
 
 export interface OrderType extends DocType {
     readonly siteId: string,
+    readonly adminId: string,
     readonly customerId?: string,
     readonly createdAt: Date,
     readonly orderInfo: readonly {

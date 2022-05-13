@@ -8,6 +8,7 @@ import * as OrderTypes from '../types/OrderTypes';
 export class Order extends ModelLib<OrderTypes.OrderModelType>{
     protected static readonly SchemaDef: SchemaDefinition = {
         siteId: { type: Schema.Types.ObjectId, ref: 'Site', required: true },
+        adminId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         customerId: { type: Schema.Types.ObjectId, ref: 'User', required: false },
         createdAt: { type: Date, required: false },
         orderInfo: [{

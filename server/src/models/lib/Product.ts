@@ -8,12 +8,13 @@ import * as ProductTypes from '../types/ProductTypes';
 export class Product extends ModelLib<ProductTypes.ProductModelType>{
     protected static readonly SchemaDef: SchemaDefinition = {
         siteId: { type: Schema.Types.ObjectId, ref: 'Site', required: true },
-        createdAt: { type: Date, required: false },
+        adminId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        createdAt: { type: Date, required: false, default: () => Date.now() },
         updatedAt: { type: Date, required: false },
         fields: [{
             _id: false,
             key: { type: String, required: true },
-            type: { type: String, required: true }
+            value: { type: String, required: true }
         }]
     }
 
