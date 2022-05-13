@@ -23,7 +23,7 @@ export abstract class ModelLib<ModelType extends mongoose.Document> {
             // tslint:disable-next-line: no-any
             const searchFilter = _.pick(entry, searchFields) as unknown as any;
             // tslint:disable-next-line: no-unsafe-any
-            return this.Model.findOneAndUpdate(searchFilter, entry, { upsert: true });
+            return this.Model.findOneAndUpdate(searchFilter, { $setOnInsert: entry }, { upsert: true });
         })
     }
 

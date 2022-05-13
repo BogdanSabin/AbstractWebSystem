@@ -26,5 +26,16 @@ export class Theme extends ModelLib<ThemeTypes.ThemeModelType>{
         this.setSchema(Theme.SchemaDef, Theme.SchemaOptions);
 
         this.createModel(ModelNames.Theme);
+
+        this.seedData([{
+            _id: '200000000000000000000001',
+            name: 'Theme A',
+            description: 'Here comes the description'
+        },
+        {
+            _id: '200000000000000000000002',
+            name: 'Theme B',
+            description: 'Here comes the description'
+        }], ['_id'])
     }
 }
