@@ -30,24 +30,29 @@ export const productAPI = {
 
     findById: async (data: IdAppData, next: NextFunction) => {
         console.log('Data', data);
-        return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'findById' })
-            .then(async (userid: string) => {
-                return findById(data, { adminId: userid }, next);
-            })
-            .catch(error => {
-                return next(error)
-            })
+        if (data.app === 'admin') {
+            return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'findById' })
+                .then(async (userid: string) => {
+                    return findById(data, { adminId: userid }, next);
+                })
+                .catch(error => {
+                    return next(error)
+                })
+        }
+        else return findById(data, { adminId: '' }, next);
     },
 
     queryAll: async (data: ProductQueryData, next: NextFunction) => {
         console.log('Data', data);
-        return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'queryAll' })
-            .then(async (userid: string) => {
-                return queryAll(data, { adminId: userid }, next);
-            })
-            .catch(error => {
-                return next(error)
-            })
+        if (data.app === 'admin') {
+            return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'queryAll' })
+                .then(async (userid: string) => {
+                    return queryAll(data, { adminId: userid }, next);
+                })
+                .catch(error => {
+                    return next(error)
+                })
+        } else return queryAll(data, { adminId: '' }, next);
     },
 
     delete: async (data: IdData, next: NextFunction) => {
