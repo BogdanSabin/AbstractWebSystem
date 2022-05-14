@@ -28,7 +28,8 @@ export const loginUser = (data: LoginData, next: NextFunction) => {
         if (password === Factory.getInstance().getPasswordCypher().decrypt(user.password)) {
             const response = {
                 _id: user._id,
-                expiresIn: '10h'
+                expiresIn: '10h',
+                role: user.isMaster ? 'master' : user.role
             };
             //create token
             const payload: TokenPayload = { subject: user._id, role: user.role, isMaster: user.isMaster };
