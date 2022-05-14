@@ -29,5 +29,22 @@ export class Image extends ModelLib<ImageTypes.ImageModelType>{
         this.setSchema(Image.SchemaDef, Image.SchemaOptions);
 
         this.createModel(ModelNames.Image);
+
+        this.seedData([{
+            _id: '300000000000000000000001',
+            resourceScope: 'Theme',
+            resourceId: '200000000000000000000001',
+            adminId: '100000000000000000000000',
+            displayAs: 'thumbnail',
+            extension: 'png'
+        },
+        {
+            _id: '300000000000000000000002',
+            resourceScope: 'Theme',
+            resourceId: '200000000000000000000002',
+            adminId: '100000000000000000000000',
+            displayAs: 'thumbnail',
+            extension: 'png'
+        }], ['_id'])
     }
 }
