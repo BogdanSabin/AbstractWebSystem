@@ -46,6 +46,22 @@ export const config: ConfigurationType = {
                 email: 'trips.appmobile@gmail.com',
                 password: 'Tripsapp123'
             }
+        },
+        volumes: {
+            images: {
+                path: './../../volumes/images',
+                pathBzl: './../../../volumes/images',
+                // tslint:disable-next-line: no-magic-numbers
+                maxSize: 50 * 1024 * 1024, // 5MB
+                allowedExtensions: ['png', 'jpg', 'jpeg', 'gif']
+            },
+            themes: {
+                path: './../../themes/images',
+                pathBzl: './../../../themes/images',
+                // tslint:disable-next-line: no-magic-numbers
+                maxSize: 900 * 1024 * 1024,// 90MB
+                allowedExtensions: ['js']
+            }
         }
     },
     production: {},

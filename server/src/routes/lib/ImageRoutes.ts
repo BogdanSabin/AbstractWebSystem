@@ -10,6 +10,19 @@ export class ImageRoutes {
 
     create(): express.Router {
         const router = express.Router();
+
+        router.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.imageMiddleware.upload(req, res, next);
+        });
+
+        router.get('/byref/:refid/scope/:scopeid', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.imageMiddleware.findByRef(req, res, next);
+        });
+
+        router.delete('/:imageid', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.imageMiddleware.remove(req, res, next);
+        });
+
         return router;
     }
 }

@@ -20,6 +20,11 @@ export const registry = {
             findById: true,
             queryAll: true,
             delete: true
+        },
+        image: {
+            upload: true,
+            findByRef: true,
+            delete: true,
         }
     },
     user: {
@@ -43,6 +48,11 @@ export const registry = {
             findById: true,
             queryAll: true,
             delete: false
+        },
+        image: {
+            upload: false,
+            findByRef: true,
+            delete: false,
         }
     }
 }

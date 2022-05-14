@@ -41,5 +41,19 @@ export interface DefaultConfig {
             readonly email: string,
             readonly password: string
         }
+    },
+    readonly volumes: {
+        readonly images: {
+            readonly path: string,
+            readonly pathBzl: string,
+            readonly maxSize: number
+            readonly allowedExtensions: readonly string[]
+        },
+        readonly themes: {
+            readonly path: string,
+            readonly pathBzl: string,
+            readonly maxSize: number,
+            readonly allowedExtensions: readonly string[]
+        }
     }
 }

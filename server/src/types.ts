@@ -121,3 +121,20 @@ export interface OrderQueryData extends with_token {
     readonly siteId?: string
     readonly app: string
 }
+
+export interface ImgaeReferanceData {
+    readonly resourceScope: string,
+    readonly resourceId: string,
+    readonly displayAs: string
+}
+
+export interface ImageUploadData extends with_token {
+    readonly imageRefData: ImgaeReferanceData
+    readonly extension: string
+    readonly fileName: string
+}
+
+export interface ImageQueryData extends with_token {
+    readonly resourceScope: string,
+    readonly resourceId: string,
+}
