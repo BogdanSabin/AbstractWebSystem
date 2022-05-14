@@ -56,8 +56,8 @@ export const config: ConfigurationType = {
                 allowedExtensions: ['png', 'jpg', 'jpeg', 'gif']
             },
             themes: {
-                path: './../../themes/images',
-                pathBzl: './../../../themes/images',
+                path: './../../volumes/themes',
+                pathBzl: './../../../volumes/themes',
                 // tslint:disable-next-line: no-magic-numbers
                 maxSize: 900 * 1024 * 1024,// 90MB
                 allowedExtensions: ['js']

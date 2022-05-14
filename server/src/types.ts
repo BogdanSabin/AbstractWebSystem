@@ -138,3 +138,16 @@ export interface ImageQueryData extends with_token {
     readonly resourceScope: string,
     readonly resourceId: string,
 }
+
+export interface ThemeDetailQuery extends with_token {
+    readonly text: string
+}
+
+export interface ThemeData extends with_token {
+    readonly name: string,
+    readonly description: string
+}
+
+export interface ThemeUploadData extends ThemeData {
+    readonly id: string
+}

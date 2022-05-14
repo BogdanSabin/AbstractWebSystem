@@ -4,6 +4,7 @@ import { autzAPI } from './autz';
 import { productAPI } from './product';
 import { orderAPI } from './order';
 import { imageAPI } from './image';
+import { themeAPI } from './theme';
 
 export const registrarAPI = {
     auth: authAPI,
@@ -11,5 +12,6 @@ export const registrarAPI = {
     site: siteAPI,
     product: productAPI,
     order: orderAPI,
-    image: imageAPI
+    image: imageAPI,
+    theme: themeAPI
 }

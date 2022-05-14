@@ -25,6 +25,12 @@ export const registry = {
             upload: true,
             findByRef: true,
             delete: true,
+        },
+        theme: {
+            upload: false,
+            findById: true,
+            getDetails: true,
+            delete: false,
         }
     },
     user: {
@@ -52,6 +58,12 @@ export const registry = {
         image: {
             upload: false,
             findByRef: true,
+            delete: false,
+        },
+        theme: {
+            upload: false,
+            findById: true,
+            getDetails: false,
             delete: false,
         }
     }

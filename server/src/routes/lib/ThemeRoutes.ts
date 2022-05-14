@@ -10,6 +10,23 @@ export class ThemeRoutes {
 
     create(): express.Router {
         const router = express.Router();
+
+        router.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.themeMiddleware.upload(req, res, next);
+        });
+
+        router.get('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.themeMiddleware.getDetails(req, res, next);
+        });
+
+        router.get('/:themeid', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.themeMiddleware.findById(req, res, next);
+        });
+
+        router.delete('/:themeid', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.themeMiddleware.remove(req, res, next);
+        });
+
         return router;
     }
 }
