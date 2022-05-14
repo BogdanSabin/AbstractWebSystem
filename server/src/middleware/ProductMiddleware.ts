@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { BzlError } from './../bzl/lib/BzlError';
 import { respond } from './helper';
 import { RPCClient } from '../clients';
-import { IdData, ProductData, UpdateProductData, ProductQueryData } from '../types';
+import { IdData, ProductData, UpdateProductData, ProductQueryData, IdAppData } from '../types';
 
 export class ProductMiddleware {
     private readonly rpcClient: RPCClient;
@@ -43,9 +43,10 @@ export class ProductMiddleware {
     }
 
     findById(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        const idData: IdData = {
+        const idData: IdAppData = {
             token: req.headers.authorization,
-            id: req.params.productid
+            id: req.params.productid,
+            app: process.env.serverName === 'admin' ? 'admin' : 'user'
         }
         this.rpcClient.sendMessage({ api: 'product', method: 'findById', data: idData })
             .then(data => {
@@ -59,6 +60,7 @@ export class ProductMiddleware {
         const queryData: ProductQueryData = {
             token: req.headers.authorization,
             siteId: req.query.siteId as string,
+            app: process.env.serverName === 'admin' ? 'admin' : 'user',
             ...!_.isEmpty(req.query.text) && { text: (req.query.text as string) }
         }
         this.rpcClient.sendMessage({ api: 'product', method: 'queryAll', data: queryData })

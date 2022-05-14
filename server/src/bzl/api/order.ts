@@ -1,12 +1,12 @@
 import { Factory } from '../../factory';
-import { ProductData, NextFunction, UpdateProductData, IdData, ProductQueryData, IdAppData } from '../../types';
-import { create, update, findById, queryAll, remove } from '../lib/product';
+import { NextFunction, IdData, OrderData, UpdateOrderData, OrderQueryData, IdAppData } from '../../types';
+import { create, update, findById, queryAll, remove } from '../lib/order';
 
-const api = 'product';
+const api = 'order';
 
 // tslint:disable: no-unsafe-any
-export const productAPI = {
-    create: async (data: ProductData, next: NextFunction) => {
+export const orderAPI = {
+    create: async (data: OrderData, next: NextFunction) => {
         console.log('Data', data);
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'create' })
             .then(async (userid: string) => {
@@ -17,11 +17,11 @@ export const productAPI = {
             })
     },
 
-    update: async (data: UpdateProductData, next: NextFunction) => {
+    update: async (data: UpdateOrderData, next: NextFunction) => {
         console.log('Data', data);
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'update' })
             .then(async (userid: string) => {
-                return update(data, { adminId: userid }, next);
+                return update(data, { userId: userid }, next);
             })
             .catch(error => {
                 return next(error)
@@ -32,18 +32,18 @@ export const productAPI = {
         console.log('Data', data);
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'findById' })
             .then(async (userid: string) => {
-                return findById(data, { adminId: userid }, next);
+                return findById(data, { userId: userid }, next);
             })
             .catch(error => {
                 return next(error)
             })
     },
 
-    queryAll: async (data: ProductQueryData, next: NextFunction) => {
+    queryAll: async (data: OrderQueryData, next: NextFunction) => {
         console.log('Data', data);
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'queryAll' })
             .then(async (userid: string) => {
-                return queryAll(data, { adminId: userid }, next);
+                return queryAll(data, { userId: userid }, next);
             })
             .catch(error => {
                 return next(error)
@@ -54,7 +54,7 @@ export const productAPI = {
         console.log('Data', data);
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'delete' })
             .then(async (userid: string) => {
-                return remove(data, { adminId: userid }, next);
+                return remove(data, { userId: userid }, next);
             })
             .catch(error => {
                 return next(error)

@@ -23,6 +23,7 @@ export const authorize = (autzData: AutzContext, next: NextFunction) => {
         if (!payload) return next(BzlError.UnauthorizedError('Payload missing'));
 
         if (!payload.isMaster) {
+            // tslint:disable-next-line: no-unsafe-any
             if (!registry[payload.role][autzData.api][autzData.method]) {
                 return next(BzlError.UnauthorizedError(`User in not authorize in context ${payload.role}.${autzData.api}.${autzData.method}`));
             }

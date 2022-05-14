@@ -13,6 +13,13 @@ export const registry = {
             findById: true,
             queryAll: true,
             delete: true
+        },
+        order: {
+            create: true,
+            update: true,
+            findById: true,
+            queryAll: true,
+            delete: true
         }
     },
     user: {
@@ -25,6 +32,13 @@ export const registry = {
         },
         product: {
             create: false,
+            update: false,
+            findById: true,
+            queryAll: true,
+            delete: false
+        },
+        order: {
+            create: true,
             update: false,
             findById: true,
             queryAll: true,

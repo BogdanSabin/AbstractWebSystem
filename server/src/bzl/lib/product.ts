@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { BzlError } from './BzlError';
 import { Factory } from './../../factory';
-import { NextFunction, IdData, ProductData, UpdateProductData, ProductQueryData } from '../../types';
+import { NextFunction, IdData, ProductData, UpdateProductData, ProductQueryData, IdAppData } from '../../types';
 import { genericUpdate, genericFindById, genericQueryAll, genericRmove } from './common';
 
 export interface ProductFilter {
@@ -30,9 +30,9 @@ export const update = async (data: UpdateProductData, filter: ProductFilter, nex
     return genericUpdate(data.id, { fields: data.fields, updatedAt: new Date() }, filter, Model, next);
 }
 
-export const findById = async (data: IdData, filter: ProductFilter, next: NextFunction) => {
+export const findById = async (data: IdAppData, filter: ProductFilter, next: NextFunction) => {
     const Model = Factory.getInstance().getModels().getProductModel();
-    return genericFindById(data, filter, Model, next);
+    return genericFindById(_.omit(data, ['app']), data.app === 'admin' ? filter : {}, Model, next);
 }
 
 export const queryAll = async (data: ProductQueryData, filter: ProductFilter, next: NextFunction) => {
@@ -42,7 +42,7 @@ export const queryAll = async (data: ProductQueryData, filter: ProductFilter, ne
         textSearchFilter['$or'].push({ 'fields.value': { $regex: new RegExp(data.text, 'i') } })
     }
     const searchFilter = {
-        adminId: filter.adminId,
+        ...data.app === 'admin' && { adminId: filter.adminId },
         ...!_.isEmpty(data.siteId) && { siteId: data.siteId },
         ...!_.isEmpty(textSearchFilter['$or']) && textSearchFilter
     };

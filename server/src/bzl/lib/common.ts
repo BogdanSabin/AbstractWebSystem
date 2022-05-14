@@ -7,11 +7,11 @@ import { BzlError } from './BzlError';
 type UpdateData = any;
 type QueryAllFilter = any;
 interface AdminIdFiler {
-    readonly adminId: string
+    readonly adminId?: string
 }
 
 export const genericUpdate = async (resourceId: string, data: UpdateData, filter: AdminIdFiler, ResourceModel: Model<any>, next: NextFunction) => {
-    return ResourceModel.findOneAndUpdate({ _id: resourceId, adminId: filter.adminId }, _.omit(data, ['id', 'token']), { new: true })
+    return ResourceModel.findOneAndUpdate({ _id: resourceId, ...!_.isNil(filter.adminId) && { adminId: filter.adminId } }, _.omit(data, ['id', 'token']), { new: true })
         .then(res => {
             if (!res) next(BzlError.NodataFound());
             else return next(null, res);
@@ -21,7 +21,7 @@ export const genericUpdate = async (resourceId: string, data: UpdateData, filter
 }
 
 export const genericFindById = async (data: IdData, filter: AdminIdFiler, ResourceModel: Model<any>, next: NextFunction) => {
-    return ResourceModel.findOne({ _id: data.id, adminId: filter.adminId })
+    return ResourceModel.findOne({ _id: data.id, ...!_.isNil(filter.adminId) && { adminId: filter.adminId } })
         .then(res => {
             if (!res) next(BzlError.NodataFound());
             else return next(null, res);
@@ -42,7 +42,7 @@ export const genericQueryAll = async (searchFilter: QueryAllFilter, ResourceMode
 }
 
 export const genericRmove = async (data: IdData, filter: AdminIdFiler, ResourceModel: Model<any>, next: NextFunction) => {
-    return ResourceModel.findOneAndDelete({ _id: data.id, adminId: filter.adminId })
+    return ResourceModel.findOneAndDelete({ _id: data.id, ...!_.isNil(filter.adminId) && { adminId: filter.adminId } })
         .then(res => {
             if (!res) next(BzlError.NodataFound());
             else return next(null, res);

@@ -66,6 +66,11 @@ export interface IdData extends with_token {
     readonly id: string
 }
 
+export interface IdAppData extends with_token {
+    readonly id: string,
+    readonly app: string
+}
+
 export interface SiteQueryData extends with_token {
     readonly text?: string,
     readonly adminId?: string
@@ -90,5 +95,29 @@ export interface UpdateProductData extends with_token {
 export interface ProductQueryData extends with_token {
     readonly text?: string,
     readonly adminId?: string
+    readonly siteId?: string,
+    readonly app: string
+}
+
+export interface OrderData extends with_token {
+    readonly siteId: string,
+    readonly products: readonly string[],
+    readonly orderInfo: readonly {
+        readonly key: string,
+        readonly value: string,
+    }[]
+}
+
+export interface UpdateOrderData extends with_token {
+    readonly id: string
+    readonly products: readonly string[],
+    readonly orderInfo: readonly {
+        readonly key: string,
+        readonly value: string,
+    }[]
+}
+
+export interface OrderQueryData extends with_token {
     readonly siteId?: string
+    readonly app: string
 }

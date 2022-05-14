@@ -9,12 +9,13 @@ export class Order extends ModelLib<OrderTypes.OrderModelType>{
     protected static readonly SchemaDef: SchemaDefinition = {
         siteId: { type: Schema.Types.ObjectId, ref: 'Site', required: true },
         adminId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        customerId: { type: Schema.Types.ObjectId, ref: 'User', required: false },
-        createdAt: { type: Date, required: false },
+        customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        products: [{ type: Schema.Types.ObjectId, ref: 'Product', required: true }],
+        createdAt: { type: Date, required: false, default: () => Date.now() },
         orderInfo: [{
             _id: false,
             key: { type: String, required: true },
-            type: { type: String, required: true }
+            value: { type: String, required: true }
         }]
     }
 
