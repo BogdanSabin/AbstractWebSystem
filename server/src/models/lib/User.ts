@@ -1,5 +1,5 @@
 
-import { Mongoose, SchemaDefinition, SchemaOptions } from 'mongoose';
+import { Mongoose, SchemaDefinition, SchemaOptions, Schema } from 'mongoose';
 import { ModelLib } from './ModelLib';
 import { ModelNames } from '../types/ModelTypes';
 import { ModelsFactory } from '../index';
@@ -15,6 +15,7 @@ export class User extends ModelLib<UserModelType>{
         phone: String,
         password: String,
         role: { type: String, enum: ['user', 'admin'] },
+        accountInSite: { type: Schema.Types.ObjectId, ref: 'Site', required: false }, // only for users (not admins or master)
         emailConfirmation: { type: Boolean, default: false },
         isMaster: { type: Boolean, default: false }
     }

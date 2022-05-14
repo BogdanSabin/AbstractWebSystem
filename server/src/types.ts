@@ -4,12 +4,14 @@ import { BzlError } from './bzl/lib/BzlError';
 export type NextFunction = (error: BzlError, data?: any) => void
 
 export interface LoginData {
+    readonly site?: string,
     readonly email: string,
     readonly password: string,
     readonly app: string
 }
 
 export interface RegisterData {
+    readonly accountInSite?: string,
     readonly firstName: string,
     readonly lastName?: string,
     readonly email: string,
