@@ -6,6 +6,8 @@ import * as cors from 'cors';
 import * as morgan from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import { config } from './../config';
+import { MobileRoutes } from '../routes/MobileRouter';
+import { Factory } from '../factory';
 
 const mobileConfig = config.services.mobile;
 const NOT_FOUND_HTTP_STATUS = 404;
@@ -16,6 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Add Routes
+MobileRoutes.create(app, Factory.getInstance().getRouter());
 
 app.use((request: express.Request, response: express.Response) => {
     // Allow connections only on SSE event endpoint
