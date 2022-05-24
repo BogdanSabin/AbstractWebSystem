@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -17,9 +17,13 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import CategoryIcon from '@mui/icons-material/Category';
 import { Divider } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+
 const AdminPanel = ({checkSession,setView}) => {
 
     const [openCatalog, setOpenCatalog] = React.useState(true);
+
+
 
   return (
     <div>
@@ -45,42 +49,37 @@ const AdminPanel = ({checkSession,setView}) => {
 
         <Collapse in={openCatalog} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }} style={{color: 'whitesmoke'}}>
+            <ListItemButton sx={{ pl: 4 }} style={{color: 'whitesmoke'}} onClick={() => setView('products')}>
               <ListItemIcon><InventoryIcon style={{color: 'whitesmoke'}}/></ListItemIcon>
               <ListItemText primary="Products" />
             </ListItemButton>
 
-            <ListItemButton sx={{ pl: 4 }} style={{color: 'whitesmoke'}}>
-              <ListItemIcon><StarBorder style={{color: 'whitesmoke'}}/></ListItemIcon>
-              <ListItemText primary="Reviews" />
-            </ListItemButton>
-
-            <ListItemButton sx={{ pl: 4 }} style={{color: 'whitesmoke'}}>
-              <ListItemIcon ><CategoryIcon style={{color: 'whitesmoke'}}/></ListItemIcon>
-              <ListItemText primary="Categories" />
+            <ListItemButton sx={{ pl: 4 }} style={{color: 'whitesmoke'}} onClick={() => setView('orders')}>
+              <ListItemIcon>
+                <FactCheckIcon style={{color: 'whitesmoke'}}/>
+              </ListItemIcon>
+              <ListItemText primary="Orders" />
             </ListItemButton>
           </List>
         </Collapse>
 
-        <ListItemButton style={{color: 'whitesmoke'}}>
-          <ListItemIcon>
-            <FactCheckIcon style={{color: 'whitesmoke'}}/>
-          </ListItemIcon>
-          <ListItemText primary="Orders" />
+        <ListItemButton style={{color: 'whitesmoke'}} onClick={() => setView('sites')}>
+          <ListItemIcon><StarBorder style={{color: 'whitesmoke'}}/></ListItemIcon>
+          <ListItemText primary="Sites" />
         </ListItemButton>
 
-        <ListItemButton style={{color: 'whitesmoke'}}>
-          <ListItemIcon>
-            <PeopleIcon style={{color: 'whitesmoke'}}/>
-          </ListItemIcon>
-          <ListItemText primary="Customers" />
-        </ListItemButton>
-
-        <ListItemButton style={{color: 'whitesmoke'}}>
+        <ListItemButton style={{color: 'whitesmoke'}} onClick={() => setView('themes')}>
           <ListItemIcon>
             <DarkModeIcon style={{color: 'whitesmoke'}}/>
           </ListItemIcon>
           <ListItemText primary="Themes" />
+        </ListItemButton>
+
+        <ListItemButton style={{color: 'whitesmoke'}} onClick={() => setView('help')}>
+          <ListItemIcon>
+            <ContactSupportIcon style={{color: 'whitesmoke'}}/>
+          </ListItemIcon>
+          <ListItemText primary="Help" />
         </ListItemButton>
       </List>
 
