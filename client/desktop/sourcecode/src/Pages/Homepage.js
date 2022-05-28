@@ -10,7 +10,7 @@ import { Typography } from '@mui/material';
 import Help from '../Components/AdminPanel/Help.js';
 import Themes from '../Components/AdminPanel/Themes.js';
 
-const Homepage = ({checkSession}) => {
+const Homepage = ({checkSession,setSelectedSite}) => {
     const [view,setView] = useState('default');
     const [sites,setSites] = useState([]);
 
@@ -23,7 +23,7 @@ const Homepage = ({checkSession}) => {
   
       useEffect(() => {
         getSites();
-      },[])
+      },[view])
 
     return (
         <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -33,7 +33,7 @@ const Homepage = ({checkSession}) => {
             <div style={{width: '85vw'}}>
                 {view === 'products' ? <Products sites={sites}/>
                 : view === 'orders' ? <Orders sites={sites}/> 
-                : view === 'sites' ? <Sites />
+                : view === 'sites' ? <Sites setSelectedSite={setSelectedSite}/>
                 : view === 'help' ? <Help />
                 : view === 'themes' ? <Themes />
                 : 

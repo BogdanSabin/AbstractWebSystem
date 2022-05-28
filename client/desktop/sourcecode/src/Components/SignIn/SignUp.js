@@ -8,7 +8,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import axios from 'axios';
-
+import AlertSnackBar from '../SnackBarAlert'
 
 const SignUp = ({setView,setResponse,setOpen}) => {
     const [showPassword,setShowPassword] = useState(false);
@@ -21,7 +21,9 @@ const SignUp = ({setView,setResponse,setOpen}) => {
     const [password,setPassword] = useState(null);
     const [confirmPassword,setConfirmPassword] = useState(null);
 
-    // const [response,setResponse] = useState(null);
+    const [openAlert,setOpenAlert] = useState(false);
+    const [alertMessage,setAlertMessage] = useState(null);
+    const [alertSeverity,setAlertSeverity] = useState(null);
 
     const handleRegister = () => {
         if(password === confirmPassword){
@@ -35,6 +37,15 @@ const SignUp = ({setView,setResponse,setOpen}) => {
                 setConfirmPassword(null);
                 setOpen(true);
             })
+            .catch(error => {
+                setAlertSeverity('info');
+                setAlertMessage(error.response.data.error);
+                setOpenAlert(true);
+              });
+        }else{
+            setAlertSeverity('warning');
+            setAlertMessage("Passwords does not match !");
+            setOpenAlert(true);  
         }
     }
 
@@ -107,6 +118,7 @@ const SignUp = ({setView,setResponse,setOpen}) => {
                 <Typography style={{ fontSize: '.7vw', fontWeight: 700}}>Already have an account ? <Link style={{cursor: 'pointer'}} onClick={() => setView('sign-in')}>Sign In</Link></Typography>
             </div>
         </Paper>
+        <AlertSnackBar open={openAlert} setOpen={setOpenAlert} message={alertMessage} severity={alertSeverity}/>
     </div>
   );
 }
