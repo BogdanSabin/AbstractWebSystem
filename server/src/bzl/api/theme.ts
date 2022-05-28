@@ -1,6 +1,6 @@
-import { NextFunction, ThemeUploadData, IdData, ThemeDetailQuery } from '../../types';
+import { NextFunction, ThemeUploadData, IdData, ThemeDetailQuery, ThemeData } from '../../types';
 import { Factory } from '../../factory';
-import { create, findById, getDetails, remove } from '../lib/theme';
+import { create, findById, getDetails, remove, add } from '../lib/theme';
 
 const api = 'theme';
 
@@ -11,6 +11,17 @@ export const themeAPI = {
         return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'upload' })
             .then(async () => {
                 return create(data, next);
+            })
+            .catch(error => {
+                return next(error)
+            })
+    },
+
+    add: async (data: ThemeData, next: NextFunction) => {
+        console.log('Data', data);
+        return Factory.getInstance().getAutzClient().authorize({ token: data.token, api: api, method: 'add' })
+            .then(async () => {
+                return add(data, next);
             })
             .catch(error => {
                 return next(error)

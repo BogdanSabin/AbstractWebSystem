@@ -56,16 +56,36 @@ export class ThemeMiddleware {
         } catch (error) { respond(res, _.toString(error), null); }
     }
 
+    add(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        const themeData: ThemeData = {
+            token: req.headers.authorization,
+            ...req.body as ThemeData
+        }
+        if (_.isEmpty(themeData.data)) respond(res, BzlError.InvalidArgument('Theme data is mandatory'), null);
+        else {
+            this.rpcClient.sendMessage({ api: 'theme', method: 'add', data: themeData })
+                .then(data => {
+                    return respond(res, null, data);
+                }).catch(err2 => {
+                    return respond(res, err2, null);
+                })
+        }
+    }
+
     findById(req: express.Request, res: express.Response, next: express.NextFunction): void {
         const idData: IdData = {
             token: req.headers.authorization,
             id: req.params.themeid
         }
+        const asFile = _.isBoolean(req.query.asFile) ? req.query.asFile : false;
         this.rpcClient.sendMessage({ api: 'theme', method: 'findById', data: idData })
-            .then(file => {
-                // tslint:disable-next-line: no-unsafe-any
-                const fileName = `${file._id}.js`;
-                return sendFile(res, path.join(this.storage, fileName));
+            .then(data => {
+                if (asFile) {
+                    // tslint:disable-next-line: no-unsafe-any
+                    const fileName = `${data._id}.js`;
+                    return sendFile(res, path.join(this.storage, fileName));
+                }
+                else return respond(res, null, data);
             }).catch(error => {
                 return respond(res, error, null);
             })

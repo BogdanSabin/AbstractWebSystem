@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as fs from 'fs';
 import { config } from './../../config';
-import { ThemeUploadData, NextFunction, IdData, ThemeDetailQuery } from '../../types';
+import { ThemeUploadData, NextFunction, IdData, ThemeDetailQuery, ThemeData } from '../../types';
 import { genericRmove, genericFindById, genericQueryAll } from './common';
 import { Factory } from '../../factory';
 import { BzlError } from './BzlError';
@@ -23,6 +23,19 @@ export const create = async (data: ThemeUploadData, next: NextFunction) => {
         .then(theme => { return next(null, theme) })
         .catch(error => { removeThemeFromDisk(themeName); return next(BzlError.InteralError(_.toString(error))) })
 
+}
+
+export const add = async (data: ThemeData, next: NextFunction) => {
+    const Model = Factory.getInstance().getModels().getThemeModel();
+    const newITheme = new Model({
+        name: data.name,
+        description: data.description,
+        data: data.data
+    })
+
+    return newITheme.save()
+        .then(theme => { return next(null, theme) })
+        .catch(error => { return next(BzlError.InteralError(_.toString(error))) })
 }
 
 export const findById = async (data: IdData, next: NextFunction) => {

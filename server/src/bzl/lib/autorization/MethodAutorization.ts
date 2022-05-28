@@ -28,6 +28,7 @@ export const registry = {
         },
         theme: {
             upload: false,
+            add: false,
             findById: true,
             getDetails: true,
             delete: false,
@@ -62,6 +63,7 @@ export const registry = {
         },
         theme: {
             upload: false,
+            add: false,
             findById: true,
             getDetails: false,
             delete: false,

@@ -11,8 +11,12 @@ export class ThemeRoutes {
     create(): express.Router {
         const router = express.Router();
 
-        router.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        router.post('/upload', (req: express.Request, res: express.Response, next: express.NextFunction) => {
             this.themeMiddleware.upload(req, res, next);
+        });
+
+        router.post('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            this.themeMiddleware.add(req, res, next);
         });
 
         router.get('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {

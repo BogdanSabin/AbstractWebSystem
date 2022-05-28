@@ -1,4 +1,4 @@
-import { Mongoose, SchemaDefinition, SchemaOptions } from 'mongoose';
+import { Mongoose, SchemaDefinition, SchemaOptions, Schema } from 'mongoose';
 import { ModelLib } from './ModelLib';
 import { ModelNames } from '../types/ModelTypes';
 import { ModelsFactory } from '../index';
@@ -9,6 +9,7 @@ export class Theme extends ModelLib<ThemeTypes.ThemeModelType>{
     protected static readonly SchemaDef: SchemaDefinition = {
         name: { type: String, required: true },
         description: { type: String, required: true },
+        data: { type: Schema.Types.Mixed, required: false }
     }
 
     readonly populateFields = {};

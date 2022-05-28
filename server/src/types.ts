@@ -148,6 +148,8 @@ export interface ThemeDetailQuery extends with_token {
 export interface ThemeData extends with_token {
     readonly name: string,
     readonly description: string
+    // tslint:disable-next-line: no-any
+    readonly data?: any
 }
 
 export interface ThemeUploadData extends ThemeData {

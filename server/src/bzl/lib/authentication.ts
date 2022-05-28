@@ -16,9 +16,9 @@ export interface TokenPayload {
 }
 // tslint:disable: no-unsafe-any
 export const loginUser = (data: LoginData, next: NextFunction) => {
-    if (data.app != 'admin' && _.isNil(data.site)) return next(BzlError.InvalidArgument('Site must be specified for users login!'));
+    if (data.app !== 'admin' && _.isNil(data.site)) return next(BzlError.InvalidArgument('Site must be specified for users login!'));
     else {
-        const filter = { email: data.email, role: data.app, ...data.app != 'admin' && { accountInSite: data.site } };
+        const filter = { email: data.email, role: data.app, ...data.app !== 'admin' && { accountInSite: data.site } };
         const password = data.password;
         const Model = Factory.getInstance().getModels().getUserModel();
         return Model.findOne(filter, (error, user) => {
@@ -45,9 +45,9 @@ export const loginUser = (data: LoginData, next: NextFunction) => {
 }
 
 export const registerUser = (data: RegisterData, next: NextFunction) => {
-    if (data.role != 'admin' && _.isNil(data.accountInSite)) return next(BzlError.InvalidArgument('Site must be specified for users register!'));
+    if (data.role !== 'admin' && _.isNil(data.accountInSite)) return next(BzlError.InvalidArgument('Site must be specified for users register!'));
     else {
-        const filter = { email: data.email, role: data.role, ...data.role != 'admin' && { accountInSite: data.accountInSite } };
+        const filter = { email: data.email, role: data.role, ...data.role !== 'admin' && { accountInSite: data.accountInSite } };
         const Model = Factory.getInstance().getModels().getUserModel();
         //check if already exists an user with this cresentials
         return Model.findOne(filter, (error, user) => {
