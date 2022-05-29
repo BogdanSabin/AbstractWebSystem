@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState,useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -51,28 +51,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Products = ({sites}) => {
     const [open, setOpen] = React.useState(false);
     const [products, setProducts] = React.useState([]);
+    const [productValue, setProductValue] = React.useState(null);
+    const [productKey, setProductKey] = React.useState(null);
+    const [productValues, setProductValues] = React.useState([]);
     const [searchProduct, setSearchProduct] = React.useState(null);
+    const [site, setSite] = React.useState(null);
+    const [selectedSite, setSelectedSite] = React.useState();
 
     const handleClickOpen = () => {
       setOpen(true);
     };
   
     const handleClose = () => {
-        setProductName(null);
-        setProductPrice(null);
-        setDescription(null);
         setSite(null);
         setOpen(false);
+        setSelectedSite();
     };
 
-    const [productName, setProductName] = React.useState(null);
-    const [productPrice, setProductPrice] = React.useState(null);
-    const [description, setDescription] = React.useState(null);
-    const [site, setSite] = React.useState(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        setProducts([]);
         getProducts();
-    },[])
+    },[searchProduct])
 
     const getProducts = () => {
         if(searchProduct !== null && searchProduct !== ''){
@@ -80,21 +80,38 @@ const Products = ({sites}) => {
             .then(res => {
                 setProducts(res.data.response)
             }) 
-        }else{
+        }
+        else{
             axios.get("http://localhost:8000/api/admin/product/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
             .then(res => {
                 setProducts(res.data.response)
             })
         }
+
+    }
+
+    const getSite = (id) => {
+        axios.get("http://localhost:8000/api/admin/site/"+id,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
+        .then(res => {
+            setSelectedSite(res.data.response)
+        })
     }
 
     const handleAddProduct = () => {
+        setProductKey(null);
+        setProductValue(null);
+        setProductValues([]);
         axios.post("http://localhost:8000/api/admin/product/",
-            {siteId: site, fields: [{key: 'name', value: productName}, {key: 'price', value: productPrice}, {key: 'description',value: description}]}, 
+            {siteId: site, fields: productValues}, 
             {  headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}}
         )
         .then(res => {
+            setProductValues([]);
+            setProductValue(null);
+            setProductKey(null);
+            setSite(null);
             getProducts();
+            setSelectedSite();
         })
         handleClose();
 
@@ -107,8 +124,23 @@ const Products = ({sites}) => {
         })
     }
 
+    const handleAddProductDetails = (key,value) => {
+        setProductValues(oldArray => [...oldArray, {
+            key: key, 
+            value: value
+        }]);
+    }
 
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if(productValue !== '' && productValue !== null){
+                handleAddProductDetails(productKey,productValue);
+            }
+        }, 500)
+    
+        return () => clearTimeout(delayDebounceFn)
+      }, [productValue])
 
     return (
         <div>
@@ -134,29 +166,29 @@ const Products = ({sites}) => {
                     <TableHead>
                     <TableRow>
                         <StyledTableCell>Site</StyledTableCell>
-                        <StyledTableCell align="center">Product name</StyledTableCell>
-                        <StyledTableCell align="center">Price</StyledTableCell>
-                        <StyledTableCell align="center">Description</StyledTableCell>
+                        <StyledTableCell align="center">Product property</StyledTableCell>
+                        <StyledTableCell align="center">Property value</StyledTableCell>
                         <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {products.map((product) => (
-                        <StyledTableRow key={product.id}>
-                            <StyledTableCell component="th" scope="product">{product.siteId}</StyledTableCell>
-                            <StyledTableCell align="center">{product['fields'][0]['value']}</StyledTableCell>
-                            <StyledTableCell align="center">{product['fields'][1]['value']} €</StyledTableCell>
-                            <StyledTableCell align="center">{product['fields'][2]['value']}</StyledTableCell>
-                            <StyledTableCell align="center">
-                                <Button variant="outlined" 
-                                    style={{color: 'whitesmoke', backgroundColor: '#308695'}} 
-                                    startIcon={<DeleteIcon style={{fontWeight:700, color: 'whitesmoke'}}
-                                    onClick={() => handleDeleteProduct(product.id)}
-                                />}>
-                                    Delete
-                                </Button>
-                            </StyledTableCell>
-                        </StyledTableRow>
+                    {products.length>0 && products.map((product) => (
+                        product['fields'].map(val => (
+                            <StyledTableRow key={product.id}>
+                                <StyledTableCell component="th" scope="product">{product.siteId}</StyledTableCell>
+                                <StyledTableCell component="th" align="center" scope="product">{val.key}</StyledTableCell>
+                                <StyledTableCell component="th" align="center" scope="product">{val.value}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    <Button variant="outlined" 
+                                        style={{color: 'whitesmoke', backgroundColor: '#308695'}} 
+                                        startIcon={<DeleteIcon style={{fontWeight:700, color: 'whitesmoke'}}
+                                        
+                                        />}onClick={() => {handleDeleteProduct(product._id);}}>
+                                        Delete
+                                    </Button>
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        ))
                     ))}
                     </TableBody>
                 </Table>
@@ -179,20 +211,22 @@ const Products = ({sites}) => {
                         id="demo-simple-select"
                         value={site}
                         label="Sites"
-                        onChange={(e) => setSite(e.target.value)}
+                        onChange={(e) => {setSite(e.target.value);getSite(e.target.value)}}
                     >
                         {sites.map(sit => (
                             <MenuItem value={sit.id}>{sit.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
-                    <TextField autoFocus margin="dense" id="name" label="Product name" type="text" fullWidth variant="outlined" onChange={(e) => setProductName(e.target.value)}/>
-                    <TextField autoFocus margin="dense" id="name" label="Product price" type="number" fullWidth variant="outlined" onChange={(e) => setProductPrice(e.target.value)}/>
-                    <TextField autoFocus margin="dense" id="name" label="Description" type="text" fullWidth variant="outlined" onChange={(e) => setDescription(e.target.value)}/>
+                {selectedSite ?
+                    selectedSite.productsSettings['fields'] ? selectedSite.productsSettings['fields'].map(f => (
+                        <TextField autoFocus margin="dense" required={f.isMandatory} id="name" label={f.key} type={f.type} fullWidth variant="outlined" onChange={(e) => {setProductValue(e.target.value); setProductKey(f.key)}}/>
+                    )):null
+                :null}
                 </DialogContent>
                 <DialogActions>
-                <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleClose}>Close</Button>
-                <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} disabled={sites === null || productName === null || productPrice === null || description === null } onClick={handleAddProduct}>Add</Button>
+                    <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleClose}>Close</Button>
+                    <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleAddProduct}>Add</Button>
                 </DialogActions>
             </Dialog>
         </div>

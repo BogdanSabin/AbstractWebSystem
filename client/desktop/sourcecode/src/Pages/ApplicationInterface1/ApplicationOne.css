@@ -1,0 +1,99 @@
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #6c5ab3; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6c5ab3; 
+    cursor: pointer;
+  }
+  
+
+.appBackground{
+    background-color: #44318D;
+    height: 100vh;
+}
+.appBar{
+    background-color: #6c5ab3;
+    width: 100vw;
+    height: 7vh;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.appTitle{
+    font-size: 5vw;
+    font-weight: 500;
+    text-align: center;
+    padding-top: 1vw;
+    color:#ffffff;
+}
+
+.logoutDiv{
+    position: absolute;
+    right: 3vw;
+    top: .8vw;
+    
+}
+
+.logout{
+    background-color: black;
+    color:#ffffff;
+    width: 7vw;
+}
+
+.cart{
+    position: absolute;
+    right: 13vw;
+    top: .8vw;
+}
+
+.descriptionBackground{
+    width: 40vw;
+    height: 3vw;
+    margin: auto;
+    margin-top: 1vw;
+    display: flex;
+}
+
+.descriptionText{
+    margin: auto;
+    width: 100%;
+}
+
+.orderProducts{
+    height: 20vw;
+    width: 90vw;
+    margin: auto;
+    margin-top: 5vw;
+    white-space: nowrap;
+    position: relative;
+    /* overflow-x: scroll; */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.cardProduct{
+    margin-right: 5vw;
+    background-color: #eee;
+    float: none;
+    margin: 0 1%;
+    display: inline-block;
+    zoom: 1;
+    cursor: pointer;
+}

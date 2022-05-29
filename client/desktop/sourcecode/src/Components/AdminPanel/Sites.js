@@ -24,34 +24,28 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Typography } from '@mui/material';
-import Fab from '@mui/material/Fab';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#308695',
-        color: theme.palette.common.white,
-        fontSize: '1vw',
-        fontWeigth: 700
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-  
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import img from '../../Media/Images/site.jpg'
+import CloseIcon from '@mui/icons-material/Close';
+import DialogAction from '../DialogAction';
+import AlertSnackBar from '../SnackBarAlert'
 
 
-const Sites = () => {
+const Sites = ({setSelectedSite}) => {
+
+    const [idDelete,setIdDelete] = useState(null);
+    const [openAlert,setOpenAlert] = useState(false);
+    const [alertMessage,setAlertMessage] = useState(null);
+    const [alertSeverity,setAlertSeverity] = useState(null);
+    const [openDialog,setOpenDialog] = useState(false);
+    const [message,setMessage] = useState(null);
+
     const [open, setOpen] = React.useState(false);
     const [sites, setSites] = React.useState([]);
     const [searchSites, setSearchSites] = React.useState(null);
@@ -72,6 +66,14 @@ const Sites = () => {
     const [orderProperty, setOrderPropety] = useState(null);
     const [orderType,setOrderType] = useState(null);
     const [orderIsMandatory,setOrderIsMandatory] = useState(false);
+    const [themes,setThemes] = useState([]);
+
+    const getThemes = () => {
+        axios.get("http://localhost:8000/api/admin/theme/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
+        .then(res => {
+            setThemes(res.data.response);
+        });
+    }
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -121,15 +123,30 @@ const Sites = () => {
             {headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}}
         )
         .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Site successfully created !');
             getSites();
         })
         handleClose();
 
     }
 
-    const handleDeleteSite = (site) => {
-        axios.delete("http://localhost:8000/api/admin/site/"+site,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
+    const handleSelectDelete = (id) => {
+        setIdDelete(id);
+        setOpenDialog(true);
+        setMessage("Are you sure you want to delete the site ?");
+    }
+
+    const handleDeleteSite = () => {
+        axios.delete("http://localhost:8000/api/admin/site/"+idDelete,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
         .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Site deleted !');
+            setMessage(null);
+            setIdDelete(null);
+            setOpenDialog(false);
             getSites();
         })
     }
@@ -159,6 +176,7 @@ const Sites = () => {
 
     React.useEffect(() => {
         getSites();
+        getThemes();
     },[searchSites])
 
     return (
@@ -173,48 +191,38 @@ const Sites = () => {
 
                 <Button 
                     variant="outlined" style={{color: 'whitesmoke', backgroundColor: '#308695', right: '3vw'}} 
-                    startIcon={<AddIcon style={{fontWeight:700, color: ''}}/>}onClick={handleClickOpen}>
+                    startIcon={<AddIcon style={{fontWeight:700, color: ''}}/>} onClick={handleClickOpen}>
                     Add site
                 </Button>
             </div>
 
-            <TableContainer component={Paper} style={{width: '80vw', margin: 'auto', marginTop: '2vw', maxHeight: '28vw'}}>
-                <Table stickyHeader sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Site name</StyledTableCell>
-                        <StyledTableCell align="center">Description</StyledTableCell>
-                        <StyledTableCell align="center">ThemeId</StyledTableCell>
-                        <StyledTableCell align="center">Product name</StyledTableCell>
-                        <StyledTableCell align="center">Product price</StyledTableCell>
-                        <StyledTableCell align="center">Order email</StyledTableCell>
-                        <StyledTableCell align="center">Actions</StyledTableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {sites.map((site) => (
-                        <StyledTableRow key={site.id}>
-                            <StyledTableCell component="th" scope="row">{site.name}</StyledTableCell>
-                            <StyledTableCell align="center">{site.description}</StyledTableCell>
-                            <StyledTableCell align="center">{site.themeId}</StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                            <StyledTableCell align="center"></StyledTableCell>
-                            <StyledTableCell align="center">{site["ordersSettings"].fields[0].key}</StyledTableCell>
-                            <StyledTableCell align="center">
-                                <Button variant="outlined" 
-                                    style={{color: 'whitesmoke', backgroundColor: '#308695'}} 
-                                    startIcon={<DeleteIcon style={{fontWeight:700, color: 'whitesmoke'}}
-                                    />}onClick={() => handleDeleteSite(site.id)}>
-                                    Delete
-                                </Button>
-                            </StyledTableCell>
-                        </StyledTableRow>
+            <div  style={{marginTop: '5vw', height: '25vw'}}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 16 }}>
+                    {sites.length>0 && sites.map((site,index) => (
+                        
+                        <Grid item xs={2} sm={4} md={4} key={index} style={{margin: 'auto'}}>
+                            <Card sx={{ maxWidth: 345 }} style={{margin: 'auto', backgroundColor: '#308695'}}>
+                                <CardActionArea>
+                                    <CardMedia component="img" height="180" image={img} alt="space"/>
+                                    <CloseIcon style={{position: 'absolute', top: '.5vw', right: '.9vw', cursor: 'pointer'}} onClick={() => handleSelectDelete(site._id)}/>
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="div">{site.name}</Typography>
+                                        {themes.length>0 && themes.map(theme =>(
+                                            <Typography style={{position: 'absolute', top: '22%', left: '40%', fontWeight: 700, fontSize: '1vw'}} variant="body2" color="text.secondary">{theme._id === site.themeId && theme.name}</Typography>
+                                        ))}
+                                        <div style={{marginTop: '1vw'}}>
+                                            <Button variant="outlined" style={{marginRight: '2vw', color: '#000', borderColor: '#000'}} onClick={() => setSelectedSite(site._id)}>Desktop</Button>
+                                            <Button variant="outlined" href={site.linkMobile} style={{color: '#000', borderColor: '#000'}} >Mobile</Button>
+                                        </div>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
                     ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                </Grid>
+            </div>
             
-            <div style={{width: '50vw', margin: 'auto',border: 1,borderStyle: 'solid', borderColor: 'whitesmoke',marginTop: '4vw'}}>
+            <div style={{width: '50vw', margin: 'auto',border: 1,borderStyle: 'solid', borderColor: 'whitesmoke',marginTop: '1vw'}}>
                 <Typography style={{color: 'whitesmoke', fontSize: '6vw', fontWeight: 700}}>
                     WEB System
                 </Typography>
@@ -253,7 +261,7 @@ const Sites = () => {
                     <div style={{display: 'flex', flexDirection: 'row'}}>
                         <TextField 
                             autoFocus 
-                            margin="dense" id="name" label="Product name" 
+                            margin="dense" id="name" label="Product property" 
                             type="text" 
                             variant="outlined"
                             value={productProperty} 
@@ -425,6 +433,9 @@ const Sites = () => {
                     <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleAddSite}>Add</Button>
                 </DialogActions>
             </Dialog>
+
+            <DialogAction open={openDialog} setOpen={setOpenDialog} message={message} handler={handleDeleteSite}/>
+            <AlertSnackBar open={openAlert} setOpen={setOpenAlert} message={alertMessage} severity={alertSeverity}/>
         </div>
     )
 }

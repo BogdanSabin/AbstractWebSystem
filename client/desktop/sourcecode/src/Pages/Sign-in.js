@@ -17,11 +17,11 @@ const SignPage =({checkSession}) => {
   
     const handleClose = () => {
       setOpen(false);
+      setView('sign-in')
     };
 
   return (
     <div>
-        {/* <SignIn setView={setView}/> */}
         {view === 'sign-up' ? <SignUp setView={setView} setOpen={setOpen} setResponse={setResponse}/> : <SignIn setView={setView} checkSession={checkSession}/> }
 
         <Dialog
