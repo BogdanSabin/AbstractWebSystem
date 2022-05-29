@@ -12,13 +12,13 @@ export const config: ConfigurationType = {
             },
             desktop: {
                 port: 8001,
-                hostname: 'localhost:8001',
+                hostname: 'localhost:3001',
                 protocol: 'http',
                 logType: 'dev'
             },
             mobile: {
                 port: 8002,
-                hostname: 'localhost:8002',
+                hostname: 'localhost:3002',
                 protocol: 'http',
                 logType: 'dev'
             }
