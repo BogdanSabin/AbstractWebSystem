@@ -38,7 +38,7 @@ export const registry = {
         site: {
             create: false,
             update: false,
-            findById: false,
+            findById: true,
             queryAll: false,
             delete: false
         },

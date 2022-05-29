@@ -30,7 +30,7 @@ export const update = async (data: UpdateSiteData, filter: SiteFilter, next: Nex
 
 export const findById = async (data: IdData, filter: SiteFilter, next: NextFunction) => {
     const Model = Factory.getInstance().getModels().getSiteModel();
-    return genericFindById(data, filter, Model, next);
+    return genericFindById(data, {}, Model, next);
 }
 
 export const queryAll = async (data: SiteQueryData, filter: SiteFilter, next: NextFunction) => {
