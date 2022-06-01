@@ -22,7 +22,9 @@ const Homepage = ({checkSession,setSelectedSite}) => {
       }
   
       useEffect(() => {
-        getSites();
+          if(view !== 'default' && view !== 'help' && view !== 'themes' && view !== 'sites'){
+              getSites();
+          }
       },[view])
 
     return (

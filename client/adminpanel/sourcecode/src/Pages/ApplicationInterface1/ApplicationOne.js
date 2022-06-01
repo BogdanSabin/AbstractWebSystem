@@ -18,7 +18,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import useStyles from './styles2';
+import useStyles from './styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -108,7 +108,7 @@ const ApplicationOne = ({selectedSite,checkSession}) =>{
             if(orderValue !== '' && orderValue !== null){
                 handleAddOrderDetails(orderKey,orderValue);
             }
-        }, 3000)
+        }, 500)
     
         return () => clearTimeout(delayDebounceFn)
       }, [orderValue])
@@ -205,11 +205,6 @@ const ApplicationOne = ({selectedSite,checkSession}) =>{
                 aria-describedby="alert-dialog-slide-description"
             >
                 <DialogTitle>{"Add product  to cart ?"}</DialogTitle> {/*"}<b>{item.value}</b>{" */}
-                {/* {selectedProduct.map(item => (
-                    // console.log(item)
-                    // (item.key === 'name' || item.key ==='Name') ?
-                    // :null
-                ))} */}
 
                 <DialogActions>
                     <Button onClick={handleClose} style={{position: 'absolute', left: '1vw'}}>Disagree</Button>

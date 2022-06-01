@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 import axios from 'axios';
 import AlertSnackBar from '../SnackBarAlert'
 
-const SignUp = ({setView,setResponse,setOpen,siteId}) => {
+const SignUp = ({setView,setResponse,setOpen}) => {
     const [showPassword,setShowPassword] = useState(false);
     const [showPassword2,setShowPassword2] = useState(false);
 
@@ -27,7 +27,7 @@ const SignUp = ({setView,setResponse,setOpen,siteId}) => {
 
     const handleRegister = () => {
         if(password === confirmPassword){
-            axios.post("http://localhost:8001/api/desktop/auth/register?1",{firstName: firstName, lastName: lastName, email: email, phone: phone, password: password, accountInSite: siteId})
+            axios.post("http://localhost:8000/api/admin/auth/register?1",{firstName: firstName, lastName: lastName, email: email, phone: phone, password: password})
             .then(res => {
                 setResponse(res.data.response);
                 setFirstName(null);

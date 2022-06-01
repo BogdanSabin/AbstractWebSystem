@@ -14,6 +14,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Loading from '../Loading';
+import DialogAction from '../DialogAction';
+import AlertSnackBar from '../SnackBarAlert'
+import { Typography } from '@mui/material';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,34 +42,47 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-  
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
-
 const Orders = ({sites}) => {
     const [orders, setOrders] = React.useState([]);
     const [selectedSite,setSelectedSite] = useState(null);
+    const [loading,setLoading] = useState(false);
 
+    const [openAlert,setOpenAlert] = useState(false);
+    const [alertMessage,setAlertMessage] = useState(null);
+    const [alertSeverity,setAlertSeverity] = useState(null);
+    const [openDialog,setOpenDialog] = useState(false);
+    const [message,setMessage] = useState(null);
+    const [idDelete,setIdDelete] = useState(null);
 
+    const handleSelectDelete = (id) => {
+        setIdDelete(id);
+        setOpenDialog(true);
+        setMessage("Are you sure you want to delete the order ?");
+    }
 
     const getOrders = () => {
+        setLoading(true);
         axios.get("http://localhost:8000/api/admin/order/?siteId="+selectedSite,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
         .then(res => {
             setOrders(res.data.response)
+            setLoading(false);
         })
+        .catch(error => {
+            setAlertSeverity('info');
+            setAlertMessage(error.response.data.error);
+            setOpenAlert(true);
+            setLoading(false);
+            setOrders([]);
+          });
     }
 
-    const handleDeleteOrder = (orderId) => {
-        axios.delete("http://localhost:8000/api/admin/order/:orderid",orderId)
+    const handleDeleteOrder = () => {
+        axios.delete("http://localhost:8000/api/admin/order/"+idDelete,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
         .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Order successfully deleted !');
+            setOpenDialog(false);
             getOrders();
         })
     }
@@ -77,6 +94,7 @@ const Orders = ({sites}) => {
     },[selectedSite])
 
     return (
+        loading === false ?
         <div>
             <div style={{display: 'flex', marginTop: '2vw'}}>
                 <Paper style={{width: '20vw', margin: 'auto', padding: '.2vw'}}>
@@ -98,6 +116,7 @@ const Orders = ({sites}) => {
                 </Paper>
             </div>
 
+            {orders.length > 0 ?
             <TableContainer component={Paper} style={{width: '80vw', margin: 'auto', marginTop: '2vw'}}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -120,8 +139,8 @@ const Orders = ({sites}) => {
                                 <StyledTableCell align="center">
                                     <Button variant="outlined" 
                                         style={{color: 'whitesmoke', backgroundColor: '#308695'}} 
-                                        startIcon={<DeleteIcon style={{fontWeight:700, color: '#f44336'}}
-                                        />}onClick={() => handleDeleteOrder(order._id)}>
+                                        startIcon={<DeleteIcon style={{fontWeight:700, color: '#fff'}}
+                                        />}onClick={() => handleSelectDelete(order._id)}>
                                         Delete
                                     </Button>
                                 </StyledTableCell>
@@ -131,8 +150,15 @@ const Orders = ({sites}) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            :
+            <Paper style={{width: '30vw', margin: 'auto', marginTop: '15vw'}}>
+                <Typography style={{textAlign: 'center', fontSize: '2vw'}}>No data. Please select a site</Typography>
+            </Paper>}
 
+            <DialogAction open={openDialog} setOpen={setOpenDialog} message={message} handler={handleDeleteOrder}/>
+            <AlertSnackBar open={openAlert} setOpen={setOpenAlert} message={alertMessage} severity={alertSeverity}/>
         </div>
+        :<Loading text={"site orders"}/>
     )
 }
 

@@ -12,7 +12,7 @@ import AlertSnackBar from '../SnackBarAlert'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 
-const SignIn =({setView,checkSession,siteId}) => {
+const SignUp =({setView,checkSession}) => {
     const [showPassword,setShowPassword] = useState(false);
 
     const [openAlert,setOpenAlert] = useState(false);
@@ -30,11 +30,10 @@ const SignIn =({setView,checkSession,siteId}) => {
 
 
     const handleLogin = () => {
-        axios.post("http://localhost:8001/api/desktop/auth/login",{email: email, password: password, site: siteId})
+        axios.post("http://localhost:8000/api/admin/auth/login",{email: email, password: password})
         .then(res => {
             localStorage.setItem('token',res.data.response.token);
             localStorage.setItem('role',res.data.response.role);
-            localStorage.setItem('userID',res.data.response._id);
            checkSession();
            setOpenAlert(true);
            setAlertSeverity('success');
@@ -53,7 +52,7 @@ const SignIn =({setView,checkSession,siteId}) => {
 
     const handleRequestResetToken = () => {
         if(email !== null){
-            axios.post("http://localhost:8001/api/desktop/auth/changepassword",{email: email,site: siteId})
+            axios.post("http://localhost:8000/api/admin/auth/changepassword",{email: email})
             .then(res => {
                 setOpenAlert(true);
                 setAlertSeverity('success');
@@ -68,7 +67,7 @@ const SignIn =({setView,checkSession,siteId}) => {
     }
 
     const handleChangePassword = () => {
-        axios.post("http://localhost:8001/api/desktop/auth/changepassword",{code: resetToken, password: password, email:email,site: siteId})
+        axios.post("http://localhost:8000/api/admin/auth/changepassword",{code: resetToken, password: password, email:email})
         .then(res => {
             setEmail(null);
             setPassword(null);
@@ -175,4 +174,4 @@ const SignIn =({setView,checkSession,siteId}) => {
   );
 }
 
-export default SignIn;
+export default SignUp;

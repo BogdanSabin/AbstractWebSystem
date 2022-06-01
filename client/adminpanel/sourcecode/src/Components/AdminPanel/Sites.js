@@ -35,6 +35,7 @@ import img from '../../Media/Images/site.jpg'
 import CloseIcon from '@mui/icons-material/Close';
 import DialogAction from '../DialogAction';
 import AlertSnackBar from '../SnackBarAlert'
+import Loading from '../Loading';
 
 
 const Sites = ({setSelectedSite}) => {
@@ -67,6 +68,7 @@ const Sites = ({setSelectedSite}) => {
     const [orderType,setOrderType] = useState(null);
     const [orderIsMandatory,setOrderIsMandatory] = useState(false);
     const [themes,setThemes] = useState([]);
+    const [loading,setLoading] = useState(false);
 
     const getThemes = () => {
         axios.get("http://localhost:8000/api/admin/theme/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
@@ -98,16 +100,25 @@ const Sites = ({setSelectedSite}) => {
 
 
     const getSites = () => {
+        setLoading(true);
         if(searchSites !== null && searchSites !== ''){
             axios.get("http://localhost:8000/api/admin/site/?text="+searchSites,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
             .then(res => {
                 setSites(res.data.response)
+                setLoading(false);
             })
+            .catch(error => {
+                setLoading(false);
+              });
         }else{
             axios.get("http://localhost:8000/api/admin/site/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
             .then(res => {
                 setSites(res.data.response)
+                setLoading(false);
             })
+            .catch(error => {
+                setLoading(false);
+              });
         }
     }
 
@@ -180,6 +191,7 @@ const Sites = ({setSelectedSite}) => {
     },[searchSites])
 
     return (
+        loading === false ?
         <div>
             <div style={{display: 'flex', marginTop: '2vw'}}>
                 <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400,margin: 'auto' }} >
@@ -211,8 +223,7 @@ const Sites = ({setSelectedSite}) => {
                                             <Typography style={{position: 'absolute', top: '22%', left: '40%', fontWeight: 700, fontSize: '1vw'}} variant="body2" color="text.secondary">{theme._id === site.themeId && theme.name}</Typography>
                                         ))}
                                         <div style={{marginTop: '1vw'}}>
-                                            <Button variant="outlined" style={{marginRight: '2vw', color: '#000', borderColor: '#000'}} onClick={() => setSelectedSite(site._id)}>Desktop</Button>
-                                            <Button variant="outlined" href={site.linkMobile} style={{color: '#000', borderColor: '#000'}} >Mobile</Button>
+                                            <Button variant="outlined" style={{color: '#000', borderColor: '#000'}} href={site.linkDesktop} >To App</Button>
                                         </div>
                                     </CardContent>
                                 </CardActionArea>
@@ -430,13 +441,17 @@ const Sites = ({setSelectedSite}) => {
 
                 <DialogActions>
                     <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleClose}>Close</Button>
-                    <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleAddSite}>Add</Button>
+                    <Button 
+                        disabled={siteName === null || description === null || themeId === null || orderSettings.length === 0 || projectSettings === 0}
+                        variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleAddSite}>Add</Button>
                 </DialogActions>
             </Dialog>
 
             <DialogAction open={openDialog} setOpen={setOpenDialog} message={message} handler={handleDeleteSite}/>
             <AlertSnackBar open={openAlert} setOpen={setOpenAlert} message={alertMessage} severity={alertSeverity}/>
         </div>
+        :
+        <Loading text={"sites"}/>
     )
 }
 

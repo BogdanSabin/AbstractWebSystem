@@ -1,11 +1,15 @@
-import React, {useState,useEffect} from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
-import ApplicationOne from './Pages/ApplicationOne';
-import SignPage from './Pages/SignIn';
+import Homepage from './Pages/Homepage';
+import SignPage from './Pages/Sign-in.js';
+
+
+
 
 function App() {
-  var siteId = /[^/]*$/.exec(window.location.pathname)[0];
+  
   const [view,setView] = useState(null);
+  const [selectedSite,setSelectedSite] = useState(null);
 
   const checkSession = () => {
     var hours = 12; // to clear the localStorage after 1 hour
@@ -22,17 +26,24 @@ function App() {
     }
     if(localStorage.getItem('token')){
       setView('logged');
+    }else{
+      setView('signin');
     }
   }
 
-
+  useEffect(() => {
+    if(selectedSite !== null){
+      setView('user');
+    }
+  },[selectedSite]);
   useEffect(() => {
     checkSession();
-  },[siteId]);
+  },[]);
 
   return (
     <div className="App">
-        {view !== 'logged' ? <SignPage setView={setView} checkSession={checkSession} siteId={siteId} /> : <ApplicationOne checkSession={checkSession} selectedSite={siteId}/>}
+      {view === 'logged' ? <Homepage checkSession={checkSession} setSelectedSite={setSelectedSite}/>
+      : <SignPage setView={setView} checkSession={checkSession}/>}
     </div>
   );
 }

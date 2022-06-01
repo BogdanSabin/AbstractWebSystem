@@ -24,6 +24,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import axios from 'axios';
+import Loading from '../Loading';
+import DialogAction from '../DialogAction';
+import AlertSnackBar from '../SnackBarAlert'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,6 +60,21 @@ const Products = ({sites}) => {
     const [searchProduct, setSearchProduct] = React.useState(null);
     const [site, setSite] = React.useState(null);
     const [selectedSite, setSelectedSite] = React.useState();
+    const [image, setImage] = useState(null);
+    const [loading,setLoading] = useState(false);
+
+    const [openAlert,setOpenAlert] = useState(false);
+    const [alertMessage,setAlertMessage] = useState(null);
+    const [alertSeverity,setAlertSeverity] = useState(null);
+    const [openDialog,setOpenDialog] = useState(false);
+    const [message,setMessage] = useState(null);
+    const [idDelete,setIdDelete] = useState(null);
+    const [idProductImage,setIdProductImage] = useState(null);
+    const [openImageDialog,setOpenImageDialog] = useState(false);
+    const handleAddImage = (productId) => {
+        setIdProductImage(productId);
+        setOpenImageDialog(true)
+    }
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -68,6 +86,25 @@ const Products = ({sites}) => {
         setSelectedSite();
     };
 
+    const handleCloseImageDialog = () => {
+        setImage(null);
+        setOpenImageDialog(false);
+        setIdProductImage(null);
+    }
+
+    const handleSaveImage = () => {
+        var formData = new FormData();
+        formData.append('referenceData', '{"resourceScope": "Product", "resourceId": "'+idProductImage+'", "displayAs": "cover"}');
+        formData.append('imageData', image );
+        axios.post("http://localhost:8000/api/admin/image",formData,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
+        .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Product image successfully added !');
+            handleCloseImageDialog();
+        })
+    }
+
 
     useEffect(() => {
         setProducts([]);
@@ -75,17 +112,32 @@ const Products = ({sites}) => {
     },[searchProduct])
 
     const getProducts = () => {
+        setLoading(true);
         if(searchProduct !== null && searchProduct !== ''){
             axios.get("http://localhost:8000/api/admin/product/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
             .then(res => {
                 setProducts(res.data.response)
-            }) 
+                setLoading(false);
+            })
+            .catch(error => {
+                setAlertSeverity('error');
+                setAlertMessage(error.response.data.error);
+                setOpenAlert(true);
+                setLoading(false);
+              });
         }
         else{
             axios.get("http://localhost:8000/api/admin/product/",{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
             .then(res => {
                 setProducts(res.data.response)
+                setLoading(false);
             })
+            .catch(error => {
+                setAlertSeverity('error');
+                setAlertMessage(error.response.data.error);
+                setOpenAlert(true);
+                setLoading(false);
+              });
         }
 
     }
@@ -106,6 +158,9 @@ const Products = ({sites}) => {
             {  headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}}
         )
         .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Product successfully created !');
             setProductValues([]);
             setProductValue(null);
             setProductKey(null);
@@ -117,9 +172,13 @@ const Products = ({sites}) => {
 
     }
 
-    const handleDeleteProduct = (productId) => {
-        axios.delete("http://localhost:8000/api/admin/product/"+productId,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
+    const handleDeleteProduct = () => {
+        axios.delete("http://localhost:8000/api/admin/product/"+idDelete,{headers: {'Authorization':`Bearer ${localStorage.getItem('token')}`}})
         .then(res => {
+            setOpenAlert(true);
+            setAlertSeverity('success');
+            setAlertMessage('Product successfully deleted !');
+            setOpenDialog(false);
             getProducts();
         })
     }
@@ -131,18 +190,25 @@ const Products = ({sites}) => {
         }]);
     }
 
+    const handleSelectDelete = (id) => {
+        setIdDelete(id);
+        setOpenDialog(true);
+        setMessage("Are you sure you want to delete the product ?");
+    }
+
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if(productValue !== '' && productValue !== null){
                 handleAddProductDetails(productKey,productValue);
             }
-        }, 500)
+        }, 1000)
     
         return () => clearTimeout(delayDebounceFn)
       }, [productValue])
 
     return (
+        loading === false ?
         <div>
             <div style={{display: 'flex', marginTop: '2vw'}}>
                 <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400,margin: 'auto' }} >
@@ -168,27 +234,42 @@ const Products = ({sites}) => {
                         <StyledTableCell>Site</StyledTableCell>
                         <StyledTableCell align="center">Product property</StyledTableCell>
                         <StyledTableCell align="center">Property value</StyledTableCell>
+                        <StyledTableCell align="center">Add/Change image</StyledTableCell>
                         <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {products.length>0 && products.map((product) => (
-                        product['fields'].map(val => (
-                            <StyledTableRow key={product.id}>
-                                <StyledTableCell component="th" scope="product">{product.siteId}</StyledTableCell>
-                                <StyledTableCell component="th" align="center" scope="product">{val.key}</StyledTableCell>
-                                <StyledTableCell component="th" align="center" scope="product">{val.value}</StyledTableCell>
+                        // product['fields'].map(val => (
+                            <StyledTableRow key={product.id} >
+                                {sites.map(sit => (
+                                    sit.id === product.siteId ?
+                                        <StyledTableCell scope="product">{sit.name}</StyledTableCell>
+                                    :null
+                                ))}
+                                <StyledTableCell align="center" scope="product">
+                                    {product['fields'].map(val => ( val.key+", "))}
+                                </StyledTableCell>
+                                <StyledTableCell align="center" scope="product">
+                                    {product['fields'].map(val => ( val.value+", "))}
+                                </StyledTableCell>
+                                {/* <StyledTableCell align="center" scope="product" >{val.value}</StyledTableCell> */}
+                                <StyledTableCell align="center">
+                                    <Button variant="outlined" style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={() => handleAddImage(product.id)}>
+                                        Upload
+                                    </Button>
+                                </StyledTableCell>
                                 <StyledTableCell align="center">
                                     <Button variant="outlined" 
                                         style={{color: 'whitesmoke', backgroundColor: '#308695'}} 
                                         startIcon={<DeleteIcon style={{fontWeight:700, color: 'whitesmoke'}}
                                         
-                                        />}onClick={() => {handleDeleteProduct(product._id);}}>
+                                        />}onClick={() => {handleSelectDelete(product._id);}}>
                                         Delete
                                     </Button>
                                 </StyledTableCell>
                             </StyledTableRow>
-                        ))
+                        // ))
                     ))}
                     </TableBody>
                 </Table>
@@ -229,7 +310,23 @@ const Products = ({sites}) => {
                     <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleAddProduct}>Add</Button>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
+                <DialogTitle style={{margin: 'auto'}}>Add product image</DialogTitle>
+                <DialogContent>
+                    <input type="file" name="image" onChange={(e) => setImage(e.target.files[0])}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleCloseImageDialog}>Close</Button>
+                    <Button variant="outlined"  style={{color: 'whitesmoke', backgroundColor: '#308695'}} onClick={handleSaveImage}>Add</Button>
+                </DialogActions>
+            </Dialog>
+
+            <DialogAction open={openDialog} setOpen={setOpenDialog} message={message} handler={handleDeleteProduct}/>
+            <AlertSnackBar open={openAlert} setOpen={setOpenAlert} message={alertMessage} severity={alertSeverity}/>
         </div>
+        :
+        <Loading text={"site products"}/>
     )
 }
 

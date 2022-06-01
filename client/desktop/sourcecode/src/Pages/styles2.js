@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles';
-
 export default makeStyles((theme) => ({
 
     // code {
@@ -22,78 +21,93 @@ export default makeStyles((theme) => ({
       
     
     appBackground: {
-        backgroundColor: "#44318D",
+        backgroundColor: "#9fd3c7",
         height: "100vh",
+
+    },
+
+    container: {
+        display: 'flex', 
+        flexDirection: 'row'
     },
 
     appBar: {
-        backgroundColor: "#6c5ab3",
-        width: "100vw",
-        height: "7vh",
-        position: "relative",
+        backgroundColor: "#385170",
+        width: "35vw",
+        height: "100vh",
         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
+        
     },
     
     appTitle: {
-        fontSize: "5vw",
-        fontWeight: 500,
+        fontSize: "10vw",
+        fontWeight: 700,
         textAlign: "center",
-        paddingTop: "1vw",
+        paddingTop: "2vw",
         color:"#ffffff"
     },
     
     logoutDiv: {
         position: "absolute",
-        right: "3vw",
-        top: ".8vw"
+        bottom: '1vw',
+        left: '6vw',
     },
     
     logout: {
-        backgroundColor: "black",
-        color:"#ffffff",
-        width: "7vw",
-        backgroundColor: '#000'
+        backgroundColor: "#9fd3c7",
+        color:"#000",
+        foontWeight: 700,
+        width: "12vw",
     },
     
     cart: {
         position: "absolute",
-        right: "13vw",
-        top: ".8vw"
+        right: "2vw",
+        top: "1vw",
+        color: '#fff'
+    },
+
+    orders: {
+        position: "absolute",
+        right: "5vw",
+        top: "1vw",
+        color: '#fff'
     },
     
     descriptionBackground: {
-        width: "40vw",
-        height: "3vw",
+        position: 'absolute',
+        top: '7vw',
+        left: '1.5vw',
+        height: "35vw",
         margin: "auto",
-        marginTop: "1vw",
-        display: "flex"
+        backgroundColor: 'inherit',
+        width: "21vw",
     },
     
     descriptionText:{
         margin: "auto",
-        width: "100%"
+        width: "90%",
+        marginTop: '1vw',
+        color: '#fff'
     },
     
     orderProducts: {
-        height: "20vw",
-        width: "90vw",
-        margin: "auto",
-        marginTop: "5vw",
-        whiteSpace: "nowrap",
-        position: "relative",
-        overflowY: "hidden",
-        webkitOverflowScrolling: "touch"
+        display: "flex",
+        flexWrap: "wrap",
+        width: '75vw',
+        margin: 'auto',
+        marginTop: '5vw'
     },
     
     cardProduct: {
-        marginRight: "5vw",
-        backgroundColor: "#eee",
-        float: "none",
-        margin: "0 1%",
-        display: "inline-block",
-        zoom: "1",
-        cursor: "pointer",
-        whiteSpace: 'initial',
+        flex: "40%",
+        margin: "2vw",
+        padding: "10px"
+    },
+
+    buttonStyle: {
+        backgroundColor: "#9fd3c7",
+        color: "#000"
     }
     
 }));
