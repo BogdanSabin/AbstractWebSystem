@@ -42,9 +42,9 @@ export const config: ConfigurationType = {
                 email: 'aBVEUj9bJveUiPokFUIumGBFsTnuqAXwGRVGPgyn'
             },
             email: {
-                type: 'gmail',
-                email: 'trips.appmobile@gmail.com',
-                password: 'Tripsapp123'
+                type: 'yahoo',
+                email: 'abstractwebsystem@yahoo.com',
+                password: 'dgtoomjloiezikjn'
             }
         },
         volumes: {
